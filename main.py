@@ -31,7 +31,7 @@ import time
 BIKES = []
 def helptext():
     #simulate users?
-    print("Bike Program")
+    print("----------------Bike Program----------------")
     print("help:        Get Info About Commands")
     print("init:        Gets bikes from API")
     print("start:       Starts the bike thread")
@@ -75,8 +75,13 @@ def main():
                 mythread.terminate()
             else:
                 print("Bike program not initialized")
-        elif choice == 'url':
-            api.API_URL = choice("write the new url: ")
+        elif choice == "test":
+            json = api.getCityZones()
+            print(json)
+            json = api.getParkingspaces()
+            print(json)
+            json = api.getChargingstations()
+            print(json)
         elif choice == "q" or choice == "quit":
             break
         else:
