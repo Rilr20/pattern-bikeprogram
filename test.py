@@ -18,7 +18,7 @@ class TestAPI(unittest.TestCase):
         """
         tests the citycheck function
         """
-        testArray = [[0.025, 0.035, True], [-0.025,-0.035, True], [10, 0, False], [-10,0, False]]
+        testArray = [[0.025, 0.035, 1], [1000, 0, False]]
         for item in testArray:
             # print(item)
             res = api.cityCheck(item[0], item[1])
@@ -29,7 +29,7 @@ class TestAPI(unittest.TestCase):
         """
         testing the parkingcheck function
         """
-        testArray = [[0.00025, 0.00035, True], [-0.00025,-0.00035, True], [10, 0, False], [-10,0, False]]
+        testArray = [[-0.025,-0.025, 1], [1000, 0, False]]
         for item in testArray:
             # print(item)
             res = api.parkingCheck(item[0], item[1])
@@ -40,7 +40,7 @@ class TestAPI(unittest.TestCase):
         """
         testing the chargingcheck function
         """
-        testArray = [[0.00025, 0.00035, True], [-0.00025,-0.00035, True], [10, 0, False], [-10,0, False]]
+        testArray = [[0.025,0.025, 1], [1000, 0, False]]
         for item in testArray:
             # print(item)
             res = api.chargingCheck(item[0], item[1])

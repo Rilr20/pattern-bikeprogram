@@ -35,8 +35,8 @@ def getCityZones():
         # print(row["X"])
         # print(row["Y"])
         # print(row["radius"])
-        CITIES.append([float(row["X"]), float(row["Y"]), float(row["radius"])])
-    print(CITIES)
+        CITIES.append([float(row["X"]), float(row["Y"]), float(row["radius"]), row["id"]])
+    # print(CITIES)
     return json
 
 def getParkingspaces():
@@ -45,8 +45,8 @@ def getParkingspaces():
     json = r.json()
     for row in json:
         # print(json)
-        PARKING.append([float(row["X"]), float(row["Y"]), float(row["radius"])])
-    print(PARKING)
+        PARKING.append([float(row["X"]), float(row["Y"]), float(row["radius"]), row["id"]])
+    # print(PARKING)
 
     return json
 
@@ -55,8 +55,8 @@ def getChargingstations():
     r.raise_for_status()
     json = r.json()
     for row in json:
-        CHARGING.append([float(row["X"]), float(row["Y"]), float(row["radius"])])
-    print(CHARGING)
+        CHARGING.append([float(row["X"]), float(row["Y"]), float(row["radius"]), row["id"]])
+    # print(CHARGING)
     return json
 
 def areacheck(X, Y):
@@ -68,45 +68,39 @@ def cityCheck(X, Y):
     if len(CITIES) == 0:
         getCityZones()
     # print(X)
-    X = abs(X)
     # print(X)
-    Y = abs(Y)
     for city in CITIES:
         # print(city)
-        cityX = abs(city[0])
-        cityY = abs(city[1])
-        cityR = city[2]
-        # print(X)
-        # print(cityX)
-        # print(cityR)
-        if cityX + cityR > X > cityX and cityY + cityR > Y > cityY:
-            return True
+        # cityX = city[0]
+        # cityY = city[1]
+        # cityR = city[2]
+        # print(f'{cityX}, {cityY}, {cityR}')
+        # if cityX + cityR > X > cityX and cityY + cityR > Y > cityY:
+        #     return city[3]
+        result = insidecircle(city[0], city[1],city[2], X, Y)
+        if result:
+            return city[3]
     return False
 
 def parkingCheck(X, Y):
     if len(PARKING) == 0:
         getParkingspaces()
-    X = abs(X)
-    Y = abs(Y)
+
     for parking in PARKING:
-        parkingX = abs(parking[0])
-        parkingY = abs(parking[1])
-        parkingR = parking[2]
-        print(parkingR)
-        if parkingX > X and parkingY > Y:
-            return True
+        result = insidecircle(parking[0], parking[1],parking[2], X, Y)
+        if result:
+            return parking[3]
     return False
 
 def chargingCheck(X, Y):
     if len(CHARGING) == 0:
         getChargingstations()
-    X = abs(X)
-    Y = abs(Y)
     for charging in CHARGING:
-        chargingX = abs(charging[0])
-        chargingY = abs(charging[1])
-        charingR = charging[2]
-        print(charingR)
-        if chargingX > X and chargingY > Y:
-            return True
+        result = insidecircle(charging[0], charging[1],charging[2], X, Y)
+        if result:
+            return charging[3]
     return False
+
+def insidecircle(center_x, center_y, radius, x, y):
+    square_dist = (center_x - x) ** 2 + (center_y - y) ** 2
+    return square_dist <= radius ** 2
