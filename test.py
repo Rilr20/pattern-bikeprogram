@@ -5,6 +5,7 @@ unittest test
 import unittest
 from unittest import mock
 import api
+from bike import Bike
 
 class TestAPI(unittest.TestCase):
     """Unittest API submodule"""
@@ -46,3 +47,40 @@ class TestAPI(unittest.TestCase):
             res = api.chargingCheck(item[0], item[1])
             # print(res)
             self.assertEqual(res, item[2])
+
+class TestBike(unittest.TestCase):
+    """
+    unittest Bike class
+    """
+    def test_opposite(self):
+        """
+        testing the opposite function so it returns the opposite direction
+        """
+        testbike = Bike(0,0,0)
+        directions = ["n", "ne", "e", "se", "nw", "w", "sw", "s"]
+        rev = ["s", "sw", "w", "nw", "se", "e", "ne", "n"]
+        # print(len(directions))
+        for i in  range(0, len(directions)):
+            testbike.prevdirection = directions[i]
+            new = testbike.opposite()
+            self.assertEqual(new, rev[i])
+
+    def test_moveBike(self):
+        """
+        testing the movebike function
+        """
+        testbike = Bike(0,0,0)
+        testbike.velocity = 1
+        directions = ["n", "ne", "e", "se", "nw", "w", "sw", "s"]
+        expected = [(0,1), (0.5,0.5), (1,0), (0.5,-0.5), (-0.5,0.5), (-1,0), (-0.5,-0.5), (0,-1)]
+        for i in range(0, len(directions)):
+            # print(directions[i])
+            testbike.moveBike(directions[i])
+            restuple = (testbike.X, testbike.Y)
+            self.assertEqual(expected[i], restuple)
+            testbike.X = 0
+            testbike.Y = 0
+
+    # def test_getDirection(self):
+    #     testbike = Bike(0,0,0)
+    #     pass

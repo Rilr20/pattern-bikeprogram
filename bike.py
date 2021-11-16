@@ -18,7 +18,8 @@ class Bike():
     # 0.002973 ungefär 330m
     # 0.004464 ungefär 495m
     speeds = [0, 0.001383, 0.002973, 0.004464]
-    directions = ["n", "ne", "e", "se", "s", "sw", "w", "nw"]
+    # directions = ["n", "ne", "e", "se", "s", "sw", "w", "nw"]
+    directions = ["n", "ne", "e", "se", "nw", "w", "sw", "s"]
     statusarray = ['available', 'unavailable','service', 'charging']
     def __init__(self, _id,  X, Y):
         self._id = _id
@@ -29,34 +30,29 @@ class Bike():
         self.velocity = 0
         self.customer = None
         self.timesrun = 0
-        # self.prevdirection = None
+        self.prevdirection = self.directions[random.randint(0, len(self.directions)-1)]
     
     def updatePos(self):
         self.updateVelocity(self.velocity)
-        self.X = self.X + self.velocity
-        self.Y = self.Y + self.velocity
+        # funcion that adds velocity to X & Y depending on direction
+        # self.X = self.X + self.velocity
+        # self.Y = self.Y + self.velocity
+        direction = self.getDirection()
+        self.moveBike(direction)
         self.battery = self.battery - 1
-        #gör api request
+
     def updateVelocity(self, velocity):
         for i in range(len(self.speeds)):
-            # print(i)
-            # print(self.timesrun)
             if self.timesrun >= 3 and velocity == self.speeds[i] and self.battery > 0:
                 self.velocity = self.speeds[i-1]
                 self.timesrun = self.timesrun + 1
                 if self.speeds[i-1] == 0:
                     self.timesrun = 0
                     #destination reached?
-                # print(self.timesrun)
-                # print(self.velocity)
-                # print("self.velocity")
                 break
-
             elif velocity == self.speeds[i] and self.battery > 0:
                 self.velocity = self.speeds[i+1]
                 self.timesrun = self.timesrun + 1
-                # print(self.velocity)
-                # print("self.velocity")
                 break
             if self.battery == 0: 
                 self.velocity = 0
@@ -68,19 +64,88 @@ class Bike():
         print(f'Bike {self._id} status: {self.status}, battery: {self.battery}, velocity: {self.velocity}, current position ({self.X}, {self.Y})')
     
     def charging(self):
+        """
+        starts charging bike if its inside a chargingstation
+        otherwise its marked as available
+        """
         station = api.chargingCheck(self.X, self.Y)
         if self.battery < 100 and station != False:
             self.battery = self.battery + 1
         else:
-            self.status == "tillgänglig"
+            self.status == "available"
     def moveToCharging(self):
+        """
+        move bike to random charging station
+        """
         rand = random.randint(0, len(api.CHARGING))
         station = api.CHARGING[rand]
         self.X = station[0]
         self.Y = station[1]
 
     def removeFromCharging(self):
+        """
+        removes bike from charging station and places it inside random city
+        """
         rand = random.randint(0, len(api.CITIES))
         city = api.CITIES[rand]
         self.X = city[0]
         self.Y = city[1]
+
+    def opposite(self):
+        """
+        returns the opposite direction to previous
+        """
+        index = self.directions.index(self.prevdirection)
+        index += 1
+        return self.directions[-index]
+
+    def moveBike(self, direction):
+        """
+        case switch for moving bike
+        """
+        if direction == "n":
+            # (0,Y)
+            self.Y += self.velocity
+            pass
+        elif direction == "ne":
+            # (Y/2,X/2)
+            self.X += self.velocity/2
+            self.Y += self.velocity/2
+            pass
+        elif direction == "e":
+            # (X,0)
+            self.X += self.velocity
+            pass
+        elif direction == "se":
+            # (Y/2,-X/2)
+            self.X += self.velocity/2
+            self.Y -= self.velocity/2
+            pass
+        elif direction == "nw":
+            # (-Y/2,X/2)
+            self.X -= self.velocity/2
+            self.Y += self.velocity/2
+            pass
+        elif direction == "w":
+            # (-X,0)
+            self.X -= self.velocity
+            pass
+        elif direction == "sw":
+            # (-Y/2,-X/2)
+            self.X -= self.velocity/2
+            self.Y -= self.velocity/2
+            pass
+        elif direction == "s":
+            # (0,-Y)
+            self.Y -= self.velocity
+            pass
+
+    def getDirection(self):
+        """
+        randomizes a new direction if direction is opposite of previous randomize new one
+        """
+        newdirection = self.directions[random.randint(0, len(self.directions)-1)]
+        if newdirection != self.opposite():
+            return newdirection
+        else:
+            return self.getDirection()
