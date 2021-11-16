@@ -2,9 +2,19 @@
 Bike Class
 """
 import api
-
+import random
 class Bike():
-    speeds = [0, 0.250, 0.500, 0.750]
+    # om de går max 30km/h så är det 500m/min som max hastighet
+    # 0km/h
+    # 10km/h = 166m/min
+    # 20km/h = 333m/min
+    # 30km/h = 500m/min
+    # 0.5 i kordinater ungefär 50km
+    # 0.25 i kordinater ungefär 27.80km
+    # 0.0025 i kordinater ungefär 279,80m
+    # 0.00025 i kordinater ungefär 29,80m
+    # 0.00005 i kordinater ungefär 5m
+    speeds = [0, 0.0025, 0.005, 0.0075]
     directions = ["n", "ne", "e", "se", "s", "sw", "w", "nw"]
     statusarray = ['available', 'unavailable','service', 'charging']
     def __init__(self, _id,  X, Y):
@@ -16,7 +26,7 @@ class Bike():
         self.velocity = 0
         self.customer = None
         self.timesrun = 0
-        self.prevdirection = None
+        # self.prevdirection = None
     
     def updatePos(self):
         self.updateVelocity(self.velocity)
@@ -55,7 +65,19 @@ class Bike():
         print(f'Bike {self._id} status: {self.status}, battery: {self.battery}, velocity: {self.velocity}, current position ({self.X}, {self.Y})')
     
     def charging(self):
-        if self.battery < 100:
+        station = api.chargingCheck(self.X, self.Y)
+        if self.battery < 100 and station != False:
             self.battery = self.battery + 1
         else:
             self.status == "tillgänglig"
+    def moveToCharging(self):
+        rand = random.randint(0, len(api.CHARGING))
+        station = api.CHARGING[rand]
+        self.X = station[0]
+        self.Y = station[1]
+
+    def removeFromCharging(self):
+        rand = random.randint(0, len(api.CITIES))
+        city = api.CITIES[rand]
+        self.X = city[0]
+        self.Y = city[1]
