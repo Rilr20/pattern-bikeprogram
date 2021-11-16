@@ -105,39 +105,39 @@ class Bike():
         """
         if direction == "n":
             # (0,Y)
-            self.Y += self.velocity
+            self.Y += round(self.velocity, 6)
             pass
         elif direction == "ne":
             # (Y/2,X/2)
-            self.X += self.velocity/2
-            self.Y += self.velocity/2
+            self.X += round(self.velocity/2, 6)
+            self.Y += round(self.velocity/2, 6)
             pass
         elif direction == "e":
             # (X,0)
-            self.X += self.velocity
+            self.X += round(self.velocity, 6)
             pass
         elif direction == "se":
             # (Y/2,-X/2)
-            self.X += self.velocity/2
-            self.Y -= self.velocity/2
+            self.X += round(self.velocity/2, 6)
+            self.Y -= round(self.velocity/2, 6)
             pass
         elif direction == "nw":
             # (-Y/2,X/2)
-            self.X -= self.velocity/2
-            self.Y += self.velocity/2
+            self.X -= round(self.velocity/2, 6)
+            self.Y += round(self.velocity/2, 6)
             pass
         elif direction == "w":
             # (-X,0)
-            self.X -= self.velocity
+            self.X -= round(self.velocity, 6)
             pass
         elif direction == "sw":
             # (-Y/2,-X/2)
-            self.X -= self.velocity/2
-            self.Y -= self.velocity/2
+            self.X -= round(self.velocity/2, 6)
+            self.Y -= round(self.velocity/2, 6)
             pass
         elif direction == "s":
             # (0,-Y)
-            self.Y -= self.velocity
+            self.Y -= round(self.velocity, 6)
             pass
 
     def getDirection(self):

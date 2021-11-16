@@ -28,7 +28,32 @@ import time
 #TODO: Nattsimulering? dvs. de flyttas till laddstationer
 #
 
-BIKES = []
+
+# def bikeinit():
+    
+#     print(BIKES)
+def createBikes():
+    # sends requests gets all bikes
+
+    json = api.getBikes()
+    bikearray = []
+    # print(json[0])
+
+    #uses the json data to create bike objects
+    for i in range(len(json)):
+        element = json[i]
+        _id = element["id"]
+        X = element["X"]
+        Y = element["Y"]
+        bike = Bike(_id, X, Y)
+        bikearray.append(bike)
+    # bike = Bike(100, 0, 0)
+    # bike.status = 'upptagen'
+    # bikearray.append(bike)
+    return bikearray
+
+BIKES = createBikes()
+
 def helptext():
     #simulate users?
     print("----------------Bike Program----------------")
@@ -48,14 +73,17 @@ def main():
             #funktion
             # print("test")
             helptext()
-        elif choice == "init":
-            bikeinit()
+        # elif choice == "init":
+        #     print("inits")
+        #     bikeinit()
             # mythread.start()
             # print("sleepy time")
             # time.sleep(120)
             # print("sleepy time done")
         elif choice == "start":
-            if len(BIKES) > 0:
+            # print(len(BIKES))
+            if len(BIKES) != 0:
+                print("start thread")
                 mythread = bikeThread(BIKES)
                 mythread.setName('bike update thread')
                 mythread.start()
@@ -96,29 +124,6 @@ def main():
     # bike.updateVelocity(0.750)
     # bike.updateVelocity(0.500)
     # bike.updateVelocity(0.250)
-
-def bikeinit():
-    BIKES = []
-    BIKES = createBikes()
-def createBikes():
-    # sends requests gets all bikes
-
-    json = api.getBikes()
-    bikearray = []
-    # print(json[0])
-
-    #uses the json data to create bike objects
-    for i in range(len(json)):
-        element = json[i]
-        _id = element["id"]
-        X = element["X"]
-        Y = element["Y"]
-        bike = Bike(_id, X, Y)
-        bikearray.append(bike)
-    # bike = Bike(100, 0, 0)
-    # bike.status = 'upptagen'
-    # bikearray.append(bike)
-    return bikearray
 
 if __name__ == "__main__":
     main()
