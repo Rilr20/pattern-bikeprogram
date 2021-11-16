@@ -14,7 +14,10 @@ class Bike():
     # 0.0025 i kordinater ungefär 279,80m
     # 0.00025 i kordinater ungefär 29,80m
     # 0.00005 i kordinater ungefär 5m
-    speeds = [0, 0.0025, 0.005, 0.0075]
+    # 0.001383 ungefär 153m
+    # 0.002973 ungefär 330m
+    # 0.004464 ungefär 495m
+    speeds = [0, 0.001383, 0.002973, 0.004464]
     directions = ["n", "ne", "e", "se", "s", "sw", "w", "nw"]
     statusarray = ['available', 'unavailable','service', 'charging']
     def __init__(self, _id,  X, Y):
