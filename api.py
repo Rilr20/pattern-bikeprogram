@@ -136,3 +136,6 @@ def postBikeLog():
     # r = requests.post(f'{API_URL}', data=data)
     # print(f'PUT status: {r.status_code}')
     pass
+
+def putBikeLog():
+    pass

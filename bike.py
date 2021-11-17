@@ -41,6 +41,7 @@ class Bike():
         direction = self.getDirection()
         self.moveBike(direction)
         checklist = api.areaCheck(self.X, self.Y)
+        self.moveToCity(checklist[0])
         self.battery = self.battery - 1
 
     def moveToCity(self, cityval):

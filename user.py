@@ -41,3 +41,6 @@ class User():
             self.wait -= 1
         elif self.wait == 0 and self.bike == None:
             self.getOnBike()
+
+    def userprint(self):
+        print(f'User {self._id} Bike: {self.bike} Waittime: {self.wait}')
