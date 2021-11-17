@@ -7,17 +7,30 @@ API_URL = f'http://localhost:{PORT}/sparkapi/v1/'
 CITIES = []
 PARKING = []
 CHARGING = []
+def getUsers():
+    r = requests.get(f'{API_URL}users')
+    r.raise_for_status()
+    json = r.json()
+    return json
 def getBikes():
     r = requests.get(f'{API_URL}bikes')
     r.raise_for_status() #gives error if request doesn't work
     json = r.json()
+    # print(json)
     return json
 
-def putBikes(_id, X, Y, battery, velocity):
+def getOneBike(_id):
+    r = requests.get(f'{API_URL}bikes/{_id}')
+    r.raise_for_status()
+    json = r.json()
+    return json
+
+def putBikes(_id, X, Y, status, battery, velocity):
         req_session = requests.Session()
         data = {
             "X": X,
             "Y": Y,
+            "status": status,
             "battery": battery,
             "velocity": velocity
         }
@@ -25,7 +38,6 @@ def putBikes(_id, X, Y, battery, velocity):
         print(f'PUT status: {r.status_code}')
 
 def getCityZones():
-
     r = requests.get(f'{API_URL}cities')
     r.raise_for_status()
     json = r.json()
@@ -59,10 +71,14 @@ def getChargingstations():
     # print(CHARGING)
     return json
 
-def areacheck(X, Y):
+def areaCheck(X, Y):
     #absolutbelopet av X & Y för att sedan se om de är mindre eller lika med området i city
-
-    pass
+    checkList = []
+    checkList.append(cityCheck(X, Y))
+    checkList.append(parkingCheck(X, Y))
+    checkList.append(chargingCheck(X, Y))
+    return checkList
+    # pass
 
 def cityCheck(X, Y):
     if len(CITIES) == 0:
@@ -104,3 +120,19 @@ def chargingCheck(X, Y):
 def insidecircle(center_x, center_y, radius, x, y):
     square_dist = (center_x - x) ** 2 + (center_y - y) ** 2
     return square_dist <= radius ** 2
+
+def availablebikes():
+    bikes = getBikes()
+    availablebikes = []
+    for bike in bikes:
+        if bike["status"] == "available":
+            availablebikes.append(bike)
+    return availablebikes
+
+def postBikeLog():
+    # req_session = requests.Session()
+    # data = {
+    # }
+    # r = requests.post(f'{API_URL}', data=data)
+    # print(f'PUT status: {r.status_code}')
+    pass
