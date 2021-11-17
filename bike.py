@@ -21,15 +21,16 @@ class Bike():
     # directions = ["n", "ne", "e", "se", "s", "sw", "w", "nw"]
     directions = ["n", "ne", "e", "se", "nw", "w", "sw", "s"]
     statusarray = ['available', 'unavailable','service', 'charging']
-    def __init__(self, _id,  X, Y):
+    def __init__(self, _id,  X, Y, status):
         self._id = _id
         self.X = float(X)
         self.Y = float(Y)
-        self.status = self.statusarray[0]
+        self.status = status
         self.battery = 100
         self.velocity = 0
         self.customer = None
         self.timesrun = 0
+        self.servicecount = 0
         self.prevdirection = self.directions[random.randint(0, len(self.directions)-1)]
     
     def updatePos(self):
@@ -39,7 +40,15 @@ class Bike():
         # self.Y = self.Y + self.velocity
         direction = self.getDirection()
         self.moveBike(direction)
+        checklist = api.areaCheck(self.X, self.Y)
         self.battery = self.battery - 1
+
+    def moveToCity(self, cityval):
+        if cityval == False:
+            rand = random.randint(0, len(api.CHARGING))
+            city = api.CITIES[rand]
+            self.X = city[0]
+            self.Y = city[1]
 
     def updateVelocity(self, velocity):
         for i in range(len(self.speeds)):
@@ -48,7 +57,9 @@ class Bike():
                 self.timesrun = self.timesrun + 1
                 if self.speeds[i-1] == 0:
                     self.timesrun = 0
-                    #destination reached?
+                    #destination reached!
+                    # setting to available again
+                    self.status = self.statusarray[0]
                 break
             elif velocity == self.speeds[i] and self.battery > 0:
                 self.velocity = self.speeds[i+1]
@@ -57,8 +68,9 @@ class Bike():
             if self.battery == 0: 
                 self.velocity = 0
                 self.status = self.statusarray[2]
+
     def putRequest(self):
-        api.putBikes(self._id, self.X, self.Y, self.battery, self.velocity)
+        api.putBikes(self._id, self.X, self.Y, self.status, self.battery, self.velocity)
 
     def bikeprint(self):
         print(f'Bike {self._id} status: {self.status}, battery: {self.battery}, velocity: {self.velocity}, current position ({self.X}, {self.Y})')
@@ -149,3 +161,14 @@ class Bike():
             return newdirection
         else:
             return self.getDirection()
+
+    def service(self):
+        """
+        bike is under service
+        """
+        if self.servicecount < 10:
+            self.status = self.statusarray[2]
+            self.servicecount += 1
+        else:
+            self.servicecount = 0
+            self.status = self.statusarray[0]
