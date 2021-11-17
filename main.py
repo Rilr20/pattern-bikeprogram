@@ -3,6 +3,7 @@ Main file
 """
 import requests
 from bike import Bike
+from user import User
 from bikethread import bikeThread
 import api
 import time
@@ -45,7 +46,9 @@ def createBikes():
         _id = element["id"]
         X = element["X"]
         Y = element["Y"]
-        bike = Bike(_id, X, Y)
+        status = element["status"]
+        print(status)
+        bike = Bike(_id, X, Y, status)
         bikearray.append(bike)
     # bike = Bike(100, 0, 0)
     # bike.status = 'upptagen'
@@ -104,12 +107,16 @@ def main():
             else:
                 print("Bike program not initialized")
         elif choice == "test":
-            json = api.getCityZones()
-            print(json)
-            json = api.getParkingspaces()
-            print(json)
-            json = api.getChargingstations()
-            print(json)
+            # json = api.getCityZones()
+            # print(json)
+            # json = api.getParkingspaces()
+            # print(json)
+            # json = api.getChargingstations()
+            # print(json)
+            # json  = api.availablebikes()
+            # print(json)
+            user = User(1)
+            user.getOnBike()
         elif choice == "q" or choice == "quit":
             break
         else:
