@@ -22,6 +22,9 @@ class Bike():
     directions = ["n", "ne", "e", "se", "nw", "w", "sw", "s"]
     statusarray = ['available', 'unavailable','service', 'charging']
     def __init__(self, _id,  X, Y, status):
+        """
+        constructor for bike.
+        """
         self._id = _id
         self.X = float(X)
         self.Y = float(Y)
@@ -34,6 +37,12 @@ class Bike():
         self.prevdirection = self.directions[random.randint(0, len(self.directions)-1)]
     
     def updatePos(self):
+        """
+        updates the velocity; increasing or decreasing it
+        updates the direction it will go next
+        moves the bike; checks if inside the circle
+        decreases the battery by 1 unit
+        """
         self.updateVelocity(self.velocity)
         # funcion that adds velocity to X & Y depending on direction
         # self.X = self.X + self.velocity
@@ -45,6 +54,9 @@ class Bike():
         self.battery = self.battery - 1
 
     def moveToCity(self, cityval):
+        """
+        checks if the value in cityval is false; move to center of random city
+        """
         if cityval == False:
             rand = random.randint(0, len(api.CHARGING))
             city = api.CITIES[rand]
@@ -52,6 +64,11 @@ class Bike():
             self.Y = city[1]
 
     def updateVelocity(self, velocity):
+        """
+        increases 1 step until max speed then decreases
+        when it reaches 0 again status becomes available //might be changed later
+        if battery reaches 0 status becomes service
+        """
         for i in range(len(self.speeds)):
             if self.timesrun >= 3 and velocity == self.speeds[i] and self.battery > 0:
                 self.velocity = self.speeds[i-1]
@@ -71,9 +88,15 @@ class Bike():
                 self.status = self.statusarray[2]
 
     def putRequest(self):
+        """
+        sends put request to api to update bike
+        """
         api.putBikes(self._id, self.X, self.Y, self.status, self.battery, self.velocity)
 
     def bikeprint(self):
+        """
+        prints information about the bikes current situation
+        """
         print(f'Bike {self._id} status: {self.status}, battery: {self.battery}, velocity: {self.velocity}, current position ({self.X}, {self.Y})')
     
     def charging(self):
