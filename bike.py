@@ -190,9 +190,9 @@ class Bike():
         """
         bike is under service
         """
-        if self.servicecount < 10:
+        if self.servicecount > 0:
             self.status = self.statusarray[2]
-            self.servicecount += 1
-        else:
-            self.servicecount = 0
+            self.servicecount -= 1
+        elif self.servicecount == 0:
+            # self.servicecount = 0
             self.status = self.statusarray[0]
