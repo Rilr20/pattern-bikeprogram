@@ -19,7 +19,6 @@ class bikeThread(Thread):
         starts a thread
         """
         while self._running:
-            print("arg")
             # print(f'running update thread {self.getName()}')
             self.update_users()
             self.update_bikes()
@@ -49,23 +48,30 @@ class bikeThread(Thread):
                 bike.velocity = 0
                 bike.charging()
                 bike.bikeprint()
-                bike.putRequest
+                bike.putRequest()
                 print(f'{bike._id} updated')
+            elif bike.status == 'service':
+                # print("bike needs service")
+                pass
 
     def update_users(self):
+        # print("user update")
         for user in self.userlist:
-            _id = user.decreasewait()
-            user.userprint()
-            if _id != None:
-                self.update_bike(_id)
-                pass
-            
+            if user.bike == None:
+                _id = user.decreasewait()
+                print(_id) #id from decreasewait function / getonbike function says what id the bike has
+                user.userprint()
+                if _id != None:
+                    self.update_bike(_id)
+                    pass
 
     def update_bike(self, _id):
         # update cykenln
+        # print("bike update")
         for bike in self.bikelist:
             if bike._id == _id:
-                bike.status == bike.statusarray[1]
+                bike.status = bike.statusarray[1]
+                bike.putRequest()
                 # print(bike._id)
                 # print(bike.status)
 
