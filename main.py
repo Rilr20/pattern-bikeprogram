@@ -39,7 +39,7 @@ def createBikes():
     bikearray = []
     # print(json[0])
     #uses the json data to create bike objects
-    for i in range(1):
+    for i in range(0, len(json)):
         element = json[i]
         _id = element["id"]
         X = element["X"]
