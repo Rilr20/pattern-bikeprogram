@@ -61,6 +61,9 @@ def createUsers():
 
 BIKES = createBikes()
 USERS = createUsers()
+api.getCityZones()
+api.getParkingspaces()
+api.getChargingstations()
 def helptext():
     #simulate users?
     print("----------------Bike Program----------------")

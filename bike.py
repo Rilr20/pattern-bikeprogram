@@ -60,7 +60,7 @@ class Bike():
         checks if the value in cityval is false; move to center of random city
         """
         if cityval == False:
-            rand = random.randint(0, len(api.CHARGING))
+            rand = random.randint(0, len(api.CITIES))
             city = api.CITIES[rand]
             self.X = city[0]
             self.Y = city[1]
@@ -110,6 +110,8 @@ class Bike():
         """
         station = api.chargingCheck(self.X, self.Y)
         if self.battery < 100 and station != False:
+            if self.status != "charging":
+                self.status = self.statusarray[3]
             self.battery = self.battery + 1
         else:
             self.status == "available"
@@ -118,7 +120,8 @@ class Bike():
         """
         move bike to random charging station
         """
-        rand = random.randint(0, len(api.CHARGING))
+        rand = random.randint(0, len(api.CHARGING)-1)
+        print(rand)
         station = api.CHARGING[rand]
         self.X = station[0]
         self.Y = station[1]
