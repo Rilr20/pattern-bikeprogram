@@ -10,7 +10,7 @@ import time
 
 #TODO: ta ut api:et och flytta till en egen modul
 #TODO: kolla vilka routes som behövs.
-# skapa order
+# skapa order?
 # skicka till bikehistory
 # hämta användare
 #
@@ -35,28 +35,32 @@ import time
 #     print(BIKES)
 def createBikes():
     # sends requests gets all bikes
-
     json = api.getBikes()
     bikearray = []
     # print(json[0])
-
     #uses the json data to create bike objects
-    for i in range(len(json)):
+    for i in range(1):
         element = json[i]
         _id = element["id"]
         X = element["X"]
         Y = element["Y"]
         status = element["status"]
-        print(status)
-        bike = Bike(_id, X, Y, status)
+        battery = element["battery"]
+        # print(status)
+        bike = Bike(_id, X, Y, battery, status)
         bikearray.append(bike)
-    # bike = Bike(100, 0, 0)
-    # bike.status = 'upptagen'
-    # bikearray.append(bike)
     return bikearray
 
-BIKES = createBikes()
+def createUsers():
+    userlist = []
+    for i in range(0, 1):
+        user = User(i)
+        userlist.append(user)
+    print("done")
+    return userlist
 
+BIKES = createBikes()
+USERS = createUsers()
 def helptext():
     #simulate users?
     print("----------------Bike Program----------------")
@@ -65,7 +69,7 @@ def helptext():
     print("start:       Starts the bike thread")
     print("stop:        Stops the bike thread")
     print("once:        Does the simulation one time")
-    print("url:         Changes the url")
+    # print("url:         Changes the url")
     print("q | quit:    Exit Program")
 def main():
     helptext()
@@ -87,7 +91,7 @@ def main():
             # print(len(BIKES))
             if len(BIKES) != 0:
                 print("start thread")
-                mythread = bikeThread(BIKES)
+                mythread = bikeThread(BIKES, USERS)
                 mythread.setName('bike update thread')
                 mythread.start()
             else:
@@ -100,7 +104,7 @@ def main():
                 print("thread is not running run start command")
         elif choice == "once":
             if len(BIKES) > 0:
-                mythread = bikeThread(BIKES)
+                mythread = bikeThread(BIKES, USERS)
                 mythread.setName('bike update thread')
                 mythread.start()
                 mythread.terminate()

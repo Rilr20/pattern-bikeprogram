@@ -98,4 +98,3 @@ class TestBike(unittest.TestCase):
             self.assertEqual("service", testbike.status)
         testbike.service()
         self.assertEqual("available", testbike.status)
-        

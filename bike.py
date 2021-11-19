@@ -21,7 +21,7 @@ class Bike():
     # directions = ["n", "ne", "e", "se", "s", "sw", "w", "nw"]
     directions = ["n", "ne", "e", "se", "nw", "w", "sw", "s"]
     statusarray = ['available', 'unavailable','service', 'charging']
-    def __init__(self, _id,  X, Y, status):
+    def __init__(self, _id,  X, Y, battery, status):
         """
         constructor for bike.
         """
@@ -29,7 +29,7 @@ class Bike():
         self.X = float(X)
         self.Y = float(Y)
         self.status = status
-        self.battery = 100
+        self.battery = int(battery)
         self.velocity = 0
         self.customer = None
         self.timesrun = 0
@@ -43,6 +43,7 @@ class Bike():
         moves the bike; checks if inside the circle
         decreases the battery by 1 unit
         """
+        print("UPDATE POSITION!=!=!=!=!")
         self.updateVelocity(self.velocity)
         # funcion that adds velocity to X & Y depending on direction
         # self.X = self.X + self.velocity
@@ -69,6 +70,7 @@ class Bike():
         when it reaches 0 again status becomes available //might be changed later
         if battery reaches 0 status becomes service
         """
+        print(self.timesrun)
         for i in range(len(self.speeds)):
             if self.timesrun >= 3 and velocity == self.speeds[i] and self.battery > 0:
                 self.velocity = self.speeds[i-1]
@@ -78,6 +80,7 @@ class Bike():
                     #destination reached!
                     # setting to available again
                     self.status = self.statusarray[0]
+                    print("bike is available soon")
                 break
             elif velocity == self.speeds[i] and self.battery > 0:
                 self.velocity = self.speeds[i+1]
