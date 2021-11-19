@@ -52,7 +52,8 @@ class Bike():
         self.moveBike(direction)
         checklist = api.areaCheck(self.X, self.Y)
         self.moveToCity(checklist[0])
-        self.battery = self.battery - 1
+        if self.velocity > 0:
+            self.battery = self.battery - 1
 
     def moveToCity(self, cityval):
         """
@@ -72,7 +73,7 @@ class Bike():
         """
         print(self.timesrun)
         for i in range(len(self.speeds)):
-            if self.timesrun >= 3 and velocity == self.speeds[i] and self.battery > 0:
+            if self.timesrun >= 3 and velocity == self.speeds[i] and self.battery > 1:
                 self.velocity = self.speeds[i-1]
                 self.timesrun = self.timesrun + 1
                 if self.speeds[i-1] == 0:
@@ -80,9 +81,9 @@ class Bike():
                     #destination reached!
                     # setting to available again
                     self.status = self.statusarray[0]
-                    print("bike is available soon")
+                    # print("bike is available soon")
                 break
-            elif velocity == self.speeds[i] and self.battery > 0:
+            elif velocity == self.speeds[i] and self.battery > 1:
                 self.velocity = self.speeds[i+1]
                 self.timesrun = self.timesrun + 1
                 break
@@ -112,6 +113,7 @@ class Bike():
             self.battery = self.battery + 1
         else:
             self.status == "available"
+
     def moveToCharging(self):
         """
         move bike to random charging station
