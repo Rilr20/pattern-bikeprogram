@@ -16,13 +16,17 @@ class User():
         # fungerar inte då bikethread måste bli skapat som ett object
         bikes = api.availablebikes()
         if len(bikes) > 0:
+            print("new bike")
             bikeindex = random.randint(0, len(bikes)-1)
             self.bike = bikes[bikeindex]
-            self.bike["status"] = "unavailable"
+            # self.bike["status"] = "unavailable"
+            # print(self.bike)
             api.putBikes(self.bike["id"],self.bike["X"],self.bike["Y"],self.bike["status"],self.bike["battery"], self.bike["velocity"])
             return self.bike["id"]
         else: 
+            print("no bike available")
             self.wait += 1
+            return None
         # print(self.bike)
         # print(self.bike["status"])
         # print(self.bike["status"])
@@ -30,16 +34,12 @@ class User():
         # pass
 
     def getOffbike(self):
-        print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa")
-        # put request bikehistory
-        # put request bike status
         self.bike["status"] = "available"
-        api.putBikes(self.bike["id"],self.bike["X"],self.bike["Y"],self.bike["status"],self.bike["battery"], self.bike["velocity"])
+        bikeinfo = api.getOneBike(self.bike["id"])
+        print(bikeinfo)
+        api.putBikes(self.bike["id"],bikeinfo["X"],bikeinfo["Y"],self.bike["status"],bikeinfo["battery"], bikeinfo["velocity"])
         self.bike = None
         self.wait = random.randint(5,20)
-        print(self.bike)
-        print(self.wait)
-        # pass
     
     def decreasewait(self):
         if self.wait > 0:
@@ -47,6 +47,8 @@ class User():
             return None
         elif self.wait == 0 and self.bike == None:
             return self.getOnBike()
+        else:
+            print(f'user {self._id} is on route')
 
     def userprint(self):
         print(f'User {self._id} Bike: {self.bike} Waittime: {self.wait}')
