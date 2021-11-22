@@ -72,72 +72,55 @@ def helptext():
     print("start:       Starts the bike thread")
     print("stop:        Stops the bike thread")
     print("once:        Does the simulation one time")
-    # print("url:         Changes the url")
+    print("charge:      Charges all bikes")
     print("q | quit:    Exit Program")
 def main():
     helptext()
+    simulation = bikeThread(BIKES, USERS)
+    simulation.setName('simulation thread')
+
     while True:
         choice = input("--> ")
         choice = choice.lower()
         if choice == "help":
-            #funktion
-            # print("test")
+            #writes a help text 
             helptext()
-        # elif choice == "init":
-        #     print("inits")
-        #     bikeinit()
-            # mythread.start()
-            # print("sleepy time")
-            # time.sleep(120)
-            # print("sleepy time done")
         elif choice == "start":
-            # print(len(BIKES))
+            #starts theg simulation 
             if len(BIKES) != 0:
                 print("start thread")
-                mythread = bikeThread(BIKES, USERS)
-                mythread.setName('bike update thread')
-                mythread.start()
+                simulation.start()
             else:
                 print("Bike program not initialized")
         elif choice == "stop":
+            #stops the simulation
             try:
-                mythread.terminate()
+                simulation.terminate()
                 print("bye thread!")
             except:
                 print("thread is not running run start command")
         elif choice == "once":
-            if len(BIKES) > 0:
-                mythread = bikeThread(BIKES, USERS)
-                mythread.setName('bike update thread')
-                mythread.start()
-                mythread.terminate()
+            #runs the simulation once
+            if len(BIKES) > 0: 
+                simulation.start()
+                simulation.terminate()
             else:
                 print("Bike program not initialized")
+        elif choice == "charge":
+            #sends all bikes to chargingstations
+            try:
+                simulation.terminate()
+            except:
+                pass
+            for bike in BIKES:
+                bike.moveToCharging()
         elif choice == "test":
-            # json = api.getCityZones()
-            # print(json)
-            # json = api.getParkingspaces()
-            # print(json)
-            # json = api.getChargingstations()
-            # print(json)
-            # json  = api.availablebikes()
-            # print(json)
             user = User(1)
             user.getOnBike()
         elif choice == "q" or choice == "quit":
             break
         else:
             print("Invalid command")
-
-    # text = r.text
-    # print(text)
-    # print(dictionary)
-    # bike.updateVelocity(0)
-    # bike.updateVelocity(0.250)
-    # bike.updateVelocity(0.500)
-    # bike.updateVelocity(0.750)
-    # bike.updateVelocity(0.500)
-    # bike.updateVelocity(0.250)
 
 if __name__ == "__main__":
     main()
