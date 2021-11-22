@@ -78,7 +78,7 @@ def main():
     helptext()
     simulation = bikeThread(BIKES, USERS)
     simulation.setName('simulation thread')
-
+    running = False
     while True:
         choice = input("--> ")
         choice = choice.lower()
@@ -89,15 +89,19 @@ def main():
             #starts theg simulation 
             try:
                 simulation.start()
+                running = True
             except:
-                simulation = bikeThread(BIKES, USERS)
-                simulation.start()
+                if running == False:
+                    simulation = bikeThread(BIKES, USERS)
+                    simulation.start()
+                    running = True
             print("stopped")
         elif choice == "stop":
             #stops the simulation
             try:
                 simulation.terminate()
                 print("bye thread!")
+                running = False
             except:
                 print("thread is not running run start command")
         elif choice == "once":
@@ -117,6 +121,8 @@ def main():
                 pass
             for bike in BIKES:
                 bike.moveToCharging()
+                bike.putRequest()
+            print("Bikes are not charging")
         elif choice == "test":
             user = User(1)
             user.getOnBike()
