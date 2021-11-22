@@ -76,9 +76,12 @@ class Bike():
             if self.timesrun >= 3 and velocity == self.speeds[i] and self.battery > 1:
                 self.velocity = self.speeds[i-1]
                 self.timesrun = self.timesrun + 1
+                centrum = self.inCentrum()
+                if centrum != False:
+                    self.velocity = self.speeds[1]
                 if self.speeds[i-1] == 0:
                     self.timesrun = 0
-                    #destination reached!
+                    # destination reached!
                     # setting to available again
                     self.status = self.statusarray[0]
                     # print("bike is available soon")
@@ -86,10 +89,20 @@ class Bike():
             elif velocity == self.speeds[i] and self.battery > 1:
                 self.velocity = self.speeds[i+1]
                 self.timesrun = self.timesrun + 1
+                centrum = self.inCentrum()
+                if centrum != False:
+                    self.velocity = self.speeds[1]
                 break
             if self.battery == 0: 
                 self.velocity = 0
                 self.status = self.statusarray[2]
+
+    def inCentrum(self):
+        for city in api.CITIES:
+            res = api.insidecircle(city[0], city[1], float(city[2])/10, self.X, self.Y)
+            if res != False:
+                return res
+        return False
 
     def putRequest(self):
         """

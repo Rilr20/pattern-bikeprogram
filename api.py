@@ -72,7 +72,6 @@ def getChargingstations():
     return json
 
 def areaCheck(X, Y):
-    #absolutbelopet av X & Y för att sedan se om de är mindre eller lika med området i city
     checkList = []
     checkList.append(cityCheck(X, Y))
     checkList.append(parkingCheck(X, Y))
