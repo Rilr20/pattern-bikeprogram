@@ -38,7 +38,7 @@ class bikeThread(Thread):
             # print(bike.status)
             # print(bike._id)
             if bike.status == "available" and bike.battery <= 30:
-                print(f'Bike {bike._id} is {bike.status}: {bike.battery}%')
+                # print(f'Bike {bike._id} is {bike.status}: {bike.battery}%')
                 bike.moveToCharging()
                 bike.charging()
                 # bike.putRequest()
@@ -48,7 +48,7 @@ class bikeThread(Thread):
                 bike.updatePos()
 
                 if bike.velocity == 0:
-                    print("stop!!!! BIKE!")
+                    # print("stop!!!! BIKE!")
                     self.get_off_bike(bike._id)
             elif bike.status == 'charging':
                 bike.velocity = 0
@@ -67,7 +67,7 @@ class bikeThread(Thread):
         for user in self.userlist:
             if user.bike == None:
                 _id = user.decreasewait()
-                print(_id) #id from decreasewait function / getonbike function says what id the bike has
+                # print(_id) #id from decreasewait function / getonbike function says what id the bike has
                 user.userprint()
                 if _id != None:
                     self.update_bike(_id)
