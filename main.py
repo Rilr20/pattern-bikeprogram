@@ -49,6 +49,7 @@ def createBikes():
         # print(status)
         bike = Bike(_id, X, Y, battery, status)
         bikearray.append(bike)
+    print("done creating bikes")
     return bikearray
 
 def createUsers():
@@ -56,7 +57,7 @@ def createUsers():
     for i in range(0, 1):
         user = User(i)
         userlist.append(user)
-    print("done")
+    print("done creating users")
     return userlist
 
 BIKES = createBikes()
@@ -68,7 +69,6 @@ def helptext():
     #simulate users?
     print("----------------Bike Program----------------")
     print("help:        Get Info About Commands")
-    print("init:        Gets bikes from API")
     print("start:       Starts the bike thread")
     print("stop:        Stops the bike thread")
     print("once:        Does the simulation one time")
@@ -87,11 +87,12 @@ def main():
             helptext()
         elif choice == "start":
             #starts theg simulation 
-            if len(BIKES) != 0:
-                print("start thread")
+            try:
                 simulation.start()
-            else:
-                print("Bike program not initialized")
+            except:
+                simulation = bikeThread(BIKES, USERS)
+                simulation.start()
+            print("stopped")
         elif choice == "stop":
             #stops the simulation
             try:
@@ -101,11 +102,13 @@ def main():
                 print("thread is not running run start command")
         elif choice == "once":
             #runs the simulation once
-            if len(BIKES) > 0: 
+            try:
                 simulation.start()
-                simulation.terminate()
-            else:
-                print("Bike program not initialized")
+            except:
+                simulation = bikeThread(BIKES, USERS)
+                simulation.start()
+            simulation.terminate()
+            print("stopped")
         elif choice == "charge":
             #sends all bikes to chargingstations
             try:
