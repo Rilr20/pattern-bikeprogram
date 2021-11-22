@@ -18,7 +18,6 @@ class Bike():
     # 0.002973 ungefär 330m
     # 0.004464 ungefär 495m
     speeds = [0, 0.001383, 0.002973, 0.004464]
-    # directions = ["n", "ne", "e", "se", "s", "sw", "w", "nw"]
     directions = ["n", "ne", "e", "se", "nw", "w", "sw", "s"]
     statusarray = ['available', 'unavailable','service', 'charging']
     def __init__(self, _id,  X, Y, battery, status):
@@ -31,8 +30,8 @@ class Bike():
         self.status = status
         self.battery = int(battery)
         self.velocity = 0
-        self.customer = None
         self.timesrun = 0
+        self.triplength = random.randint(len(self.statusarray)-1, 12)
         self.servicecount = 0
         self.prevdirection = self.directions[random.randint(0, len(self.directions)-1)]
     
@@ -43,15 +42,16 @@ class Bike():
         moves the bike; checks if inside the circle
         decreases the battery by 1 unit
         """
-        print("UPDATE POSITION!=!=!=!=!")
-        self.updateVelocity(self.velocity)
-        # funcion that adds velocity to X & Y depending on direction
-        # self.X = self.X + self.velocity
-        # self.Y = self.Y + self.velocity
+        #updates the speed
+        self.updateVelocity()
+        #get new direction
         direction = self.getDirection()
+        #move the bike
         self.moveBike(direction)
+        #checks if inside the city
         checklist = api.areaCheck(self.X, self.Y)
         self.moveToCity(checklist[0])
+        #decrease battery
         if self.velocity > 0:
             self.battery = self.battery - 1
 
@@ -60,49 +60,65 @@ class Bike():
         checks if the value in cityval is false; move to center of random city
         """
         if cityval == False:
-            rand = random.randint(0, len(api.CITIES))
+            rand = random.randint(0, len(api.CITIES)-1)
             city = api.CITIES[rand]
             self.X = city[0]
             self.Y = city[1]
 
-    def updateVelocity(self, velocity):
+    def updateVelocity(self):
         """
-        increases 1 step until max speed then decreases
-        when it reaches 0 again status becomes available //might be changed later
-        if battery reaches 0 status becomes service
+        increases velocity until triplenght equals times run then it slows down
         """
-        print(self.timesrun)
-        for i in range(len(self.speeds)):
-            if self.timesrun >= 3 and velocity == self.speeds[i] and self.battery > 1:
-                self.velocity = self.speeds[i-1]
-                self.timesrun = self.timesrun + 1
-                centrum = self.inCentrum()
-                if centrum != False:
-                    self.velocity = self.speeds[1]
-                if self.speeds[i-1] == 0:
-                    self.timesrun = 0
-                    # destination reached!
-                    # setting to available again
-                    self.status = self.statusarray[0]
-                    # print("bike is available soon")
-                break
-            elif velocity == self.speeds[i] and self.battery > 1:
-                self.velocity = self.speeds[i+1]
-                self.timesrun = self.timesrun + 1
-                centrum = self.inCentrum()
-                if centrum != False:
-                    self.velocity = self.speeds[1]
-                break
-            if self.battery == 0: 
-                self.velocity = 0
-                self.status = self.statusarray[2]
+        if self.battery == 0:
+            self.velocity = 0
+            self.status = self.statusarray[2]
+        elif self.battery > 1:
+            index = self.speeds.index(self.velocity)
+            if self.timesrun < self.triplength:
+                pass
+                self.increaseVelocity(index)
+            else:
+                pass
+                self.decreaseVelocity(index)
+
+    def increaseVelocity(self, index):
+        """
+        increases the velocity
+        """
+        self.timesrun += 1
+        try:
+            #try to increase velocity
+            self.velocity = self.speeds[index+1]
+        except:
+            #max velocity reached!
+            self.velocity = self.speeds[3]
+            #keep current velocity (max speed reached)
+            pass
+        #sets speed to 10km/h if inside centrum
+        self.inCentrum()
+
+    def decreaseVelocity(self, index):
+        """
+        decreases the velocity
+        """
+        self.timesrun += 1
+        try:
+            #try to decrease velocity
+            self.velocity = self.speeds[index-1]
+        except:
+            # destination reached!
+            self.velocity = self.speeds[0]
+            # setting to available again
+            self.status = self.statusarray[0]
+        #sets speed to 10km/h if inside centrum
+        self.inCentrum()
 
     def inCentrum(self):
         for city in api.CITIES:
             res = api.insidecircle(city[0], city[1], float(city[2])/10, self.X, self.Y)
             if res != False:
-                return res
-        return False
+                print("--------------I AM IN CENTRUM--------------")
+                self.velocity = self.speeds[1]
 
     def putRequest(self):
         """
@@ -122,12 +138,17 @@ class Bike():
         otherwise its marked as available
         """
         station = api.chargingCheck(self.X, self.Y)
+        if self.battery == 100:
+            print("arg")
         if self.battery < 100 and station != False:
             if self.status != "charging":
                 self.status = self.statusarray[3]
             self.battery = self.battery + 1
         else:
-            self.status == "available"
+            if self.battery == 100:
+                print("REMOIVEFAIOF HOPIWAFHIWOAFHOIWAFHOIWAF HIOWAIFOH A")
+                self.removeFromCharging()
+            self.status = "available"
 
     def moveToCharging(self):
         """
@@ -143,7 +164,7 @@ class Bike():
         """
         removes bike from charging station and places it inside random city
         """
-        rand = random.randint(0, len(api.CITIES))
+        rand = random.randint(0, len(api.CITIES)-1)
         city = api.CITIES[rand]
         self.X = city[0]
         self.Y = city[1]
@@ -158,44 +179,36 @@ class Bike():
 
     def moveBike(self, direction):
         """
-        case switch for moving bike
+        case switch for moving bike in all cardinal directions
         """
         if direction == "n":
             # (0,Y)
             self.Y += round(self.velocity, 6)
-            pass
         elif direction == "ne":
             # (Y/2,X/2)
             self.X += round(self.velocity/2, 6)
             self.Y += round(self.velocity/2, 6)
-            pass
         elif direction == "e":
             # (X,0)
             self.X += round(self.velocity, 6)
-            pass
         elif direction == "se":
             # (Y/2,-X/2)
             self.X += round(self.velocity/2, 6)
             self.Y -= round(self.velocity/2, 6)
-            pass
         elif direction == "nw":
             # (-Y/2,X/2)
             self.X -= round(self.velocity/2, 6)
             self.Y += round(self.velocity/2, 6)
-            pass
         elif direction == "w":
             # (-X,0)
             self.X -= round(self.velocity, 6)
-            pass
         elif direction == "sw":
             # (-Y/2,-X/2)
             self.X -= round(self.velocity/2, 6)
             self.Y -= round(self.velocity/2, 6)
-            pass
         elif direction == "s":
             # (0,-Y)
             self.Y -= round(self.velocity, 6)
-            pass
 
     def getDirection(self):
         """
