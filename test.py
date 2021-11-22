@@ -56,7 +56,7 @@ class TestBike(unittest.TestCase):
         """
         testing the opposite function so it returns the opposite direction
         """
-        testbike = Bike(0,0,0, "available")
+        testbike = Bike(0,0,0,100, "available")
         directions = ["n", "ne", "e", "se", "nw", "w", "sw", "s"]
         rev = ["s", "sw", "w", "nw", "se", "e", "ne", "n"]
         # print(len(directions))
@@ -69,7 +69,7 @@ class TestBike(unittest.TestCase):
         """
         testing the movebike function
         """
-        testbike = Bike(0,0,0, "available")
+        testbike = Bike(0,0,0,100, "available")
         testbike.velocity = 1
         directions = ["n", "ne", "e", "se", "nw", "w", "sw", "s"]
         expected = [(0,1), (0.5,0.5), (1,0), (0.5,-0.5), (-0.5,0.5), (-1,0), (-0.5,-0.5), (0,-1)]
@@ -86,7 +86,7 @@ class TestBike(unittest.TestCase):
     #     pass
 
     def test_sercice(self):
-        testbike = Bike(0,0,0, "available")
+        testbike = Bike(0,0,0,100, "available")
         testlength = 10
         testbike.servicecount = testlength
 
