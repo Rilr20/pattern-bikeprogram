@@ -117,7 +117,7 @@ class Bike():
         for city in api.CITIES:
             res = api.insidecircle(city[0], city[1], float(city[2])/10, self.X, self.Y)
             if res != False:
-                print("--------------I AM IN CENTRUM--------------")
+                # print("--------------I AM IN CENTRUM--------------")
                 self.velocity = self.speeds[1]
 
     def putRequest(self):
@@ -130,7 +130,7 @@ class Bike():
         """
         prints information about the bikes current situation
         """
-        print(f'Bike {self._id} status: {self.status}, battery: {self.battery}, velocity: {self.velocity}, current position ({self.X}, {self.Y})')
+        print(f'Bike: {self._id} status: {self.status}, battery: {self.battery}, velocity: {self.velocity}, current position ({self.X}, {self.Y})')
     
     def charging(self):
         """
@@ -138,15 +138,12 @@ class Bike():
         otherwise its marked as available
         """
         station = api.chargingCheck(self.X, self.Y)
-        if self.battery == 100:
-            print("arg")
         if self.battery < 100 and station != False:
             if self.status != "charging":
                 self.status = self.statusarray[3]
             self.battery = self.battery + 1
         else:
             if self.battery == 100:
-                print("REMOIVEFAIOF HOPIWAFHIWOAFHOIWAFHOIWAF HIOWAIFOH A")
                 self.removeFromCharging()
             self.status = "available"
 
@@ -155,7 +152,7 @@ class Bike():
         move bike to random charging station
         """
         rand = random.randint(0, len(api.CHARGING)-1)
-        print(rand)
+        # print(rand)
         station = api.CHARGING[rand]
         self.X = station[0]
         self.Y = station[1]
