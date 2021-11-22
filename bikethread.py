@@ -20,6 +20,7 @@ class bikeThread(Thread):
         """
         while self._running:
             # print(f'running update thread {self.getName()}')
+            print("-------------------------------------")
             self.update_users()
             self.update_bikes()
             time.sleep(10) #pauses for 10seconds
