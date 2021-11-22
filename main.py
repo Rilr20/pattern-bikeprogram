@@ -95,7 +95,6 @@ def main():
                     simulation = bikeThread(BIKES, USERS)
                     simulation.start()
                     running = True
-            print("stopped")
         elif choice == "stop":
             #stops the simulation
             try:
