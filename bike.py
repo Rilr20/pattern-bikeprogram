@@ -103,16 +103,16 @@ class Bike():
         decreases the velocity
         """
         self.timesrun += 1
-        try:
-            #try to decrease velocity
+        if index - 1 != -1:
+            #decreases velocity if index isn't -1
             self.velocity = self.speeds[index-1]
-        except:
+            #sets speed to 10km/h if inside centrum
+            self.inCentrum()
+        else:
             # destination reached!
             self.velocity = self.speeds[0]
             # setting to available again
             self.status = self.statusarray[0]
-        #sets speed to 10km/h if inside centrum
-        self.inCentrum()
 
     def inCentrum(self):
         """
