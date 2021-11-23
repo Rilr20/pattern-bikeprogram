@@ -1,9 +1,12 @@
 """
 Bike Class
 """
-import api
 import random
+import api
 class Bike():
+    """
+    bike class 
+    """
     # om de går max 30km/h så är det 500m/min som max hastighet
     # 0km/h
     # 10km/h = 166m/min
@@ -75,10 +78,8 @@ class Bike():
         elif self.battery > 1:
             index = self.speeds.index(self.velocity)
             if self.timesrun < self.triplength:
-                pass
                 self.increaseVelocity(index)
             else:
-                pass
                 self.decreaseVelocity(index)
 
     def increaseVelocity(self, index):
@@ -114,6 +115,9 @@ class Bike():
         self.inCentrum()
 
     def inCentrum(self):
+        """
+        if bike is in centrum set velocity to slower one
+        """
         for city in api.CITIES:
             res = api.insidecircle(city[0], city[1], float(city[2])/10, self.X, self.Y)
             if res != False:
@@ -131,7 +135,7 @@ class Bike():
         prints information about the bikes current situation
         """
         print(f'Bike: {self._id} status: {self.status}, battery: {self.battery}, velocity: {self.velocity}, current position ({self.X}, {self.Y})')
-    
+
     def charging(self):
         """
         starts charging bike if its inside a chargingstation
@@ -214,8 +218,7 @@ class Bike():
         newdirection = self.directions[random.randint(0, len(self.directions)-1)]
         if newdirection != self.opposite():
             return newdirection
-        else:
-            return self.getDirection()
+        return self.getDirection()
 
     def service(self):
         """
