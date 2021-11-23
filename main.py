@@ -1,12 +1,10 @@
 """
 Main file
 """
-import requests
 from bike import Bike
 from user import User
 from bikethread import bikeThread
 import api
-import time
 
 #TODO: ta ut api:et och flytta till en egen modul
 #TODO: kolla vilka routes som behövs.
@@ -22,25 +20,22 @@ import time
 #
 # slump på användaren så att kanske 50% av användarna använder cyklarna samtidigt
 # # stoppa användare thread
-# cykel & användar thread startas samditigt. 
+# cykel & användar thread startas samditigt.
 # gör en check om cykel är inom parkerings området / laddningsområdet.
 # gör en check om cykel är inom centrumzonen
 # gör en check om cykel är inom stadszonen
 #TODO: Nattsimulering? dvs. de flyttas till laddstationer
 #
 
-
-# def bikeinit():
-    
-#     print(BIKES)
-def createBikes():
+def create_bikes():
+    """
+    Creates bikes with json from get request
+    """
     # sends requests gets all bikes
     json = api.getBikes()
     bikearray = []
-    # print(json[0])
     #uses the json data to create bike objects
-    for i in range(0, len(json)):
-        element = json[i]
+    for element in json:
         _id = element["id"]
         X = element["X"]
         Y = element["Y"]
@@ -52,7 +47,10 @@ def createBikes():
     print("done creating bikes")
     return bikearray
 
-def createUsers():
+def create_users():
+    """
+    creates users
+    """
     userlist = []
     for i in range(0, 1):
         user = User(i)
@@ -60,12 +58,15 @@ def createUsers():
     print("done creating users")
     return userlist
 
-BIKES = createBikes()
-USERS = createUsers()
+BIKES = create_bikes()
+USERS = create_users()
 api.getCityZones()
 api.getParkingspaces()
 api.getChargingstations()
 def helptext():
+    """
+    writes out the commands you can use
+    """
     #simulate users?
     print("----------------Bike Program----------------")
     print("help:        Get Info About Commands")
@@ -74,7 +75,21 @@ def helptext():
     print("once:        Does the simulation one time")
     print("charge:      Charges all bikes")
     print("q | quit:    Exit Program")
+
+def start_thread(running):
+    try:
+        simulation.start()
+        return True
+    except:
+        if running == False:
+            simulation = bikeThread(BIKES, USERS)
+            simulation.start()
+            return True
+
 def main():
+    """
+    main function
+    """
     helptext()
     simulation = bikeThread(BIKES, USERS)
     simulation.setName('simulation thread')
@@ -83,18 +98,11 @@ def main():
         choice = input("--> ")
         choice = choice.lower()
         if choice == "help":
-            #writes a help text 
+            #writes a help text
             helptext()
         elif choice == "start":
-            #starts theg simulation 
-            try:
-                simulation.start()
-                running = True
-            except:
-                if running == False:
-                    simulation = bikeThread(BIKES, USERS)
-                    simulation.start()
-                    running = True
+            #starts theg simulation
+            running = start_thread(running)
         elif choice == "stop":
             #stops the simulation
             try:
@@ -114,18 +122,11 @@ def main():
             print("stopped")
         elif choice == "charge":
             #sends all bikes to chargingstations
-            try:
-                simulation.terminate()
-            except:
-                pass
             for bike in BIKES:
                 bike.moveToCharging()
                 bike.putRequest()
             print("Bikes are not charging")
-        elif choice == "test":
-            user = User(1)
-            user.getOnBike()
-        elif choice == "q" or choice == "quit":
+        elif choice in ("q", 'quit'):
             break
         else:
             print("Invalid command")
