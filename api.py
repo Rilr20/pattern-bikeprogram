@@ -8,11 +8,18 @@ CITIES = []
 PARKING = []
 CHARGING = []
 def getUsers():
+    """
+    maybe remove?
+    sends get request for users
+    """
     r = requests.get(f'{API_URL}users')
     r.raise_for_status()
     json = r.json()
     return json
 def getBikes():
+    """
+    sends get request for all bikes
+    """
     r = requests.get(f'{API_URL}bikes')
     r.raise_for_status() #gives error if request doesn't work
     json = r.json()
@@ -20,24 +27,33 @@ def getBikes():
     return json
 
 def getOneBike(_id):
+    """
+    request specific bike
+    """
     r = requests.get(f'{API_URL}bikes/{_id}')
     r.raise_for_status()
     json = r.json()
     return json
 
 def putBikes(_id, X, Y, status, battery, velocity):
-        req_session = requests.Session()
-        data = {
-            "X": X,
-            "Y": Y,
-            "status": status,
-            "battery": battery,
-            "velocity": velocity
-        }
-        r = requests.put(f'{API_URL}bikes/{_id}', data=data)
-        print(f'PUT status: {r.status_code}')
+    """
+    updates a bikes information
+    """
+    req_session = requests.Session()
+    data = {
+        "X": X,
+        "Y": Y,
+        "status": status,
+        "battery": battery,
+        "velocity": velocity
+    }
+    r = requests.put(f'{API_URL}bikes/{_id}', data=data)
+    print(f'PUT status: {r.status_code}')
 
 def getCityZones():
+    """
+    gets request for all cities
+    """
     r = requests.get(f'{API_URL}cities')
     r.raise_for_status()
     json = r.json()
@@ -52,6 +68,9 @@ def getCityZones():
     return json
 
 def getParkingspaces():
+    """
+    get request for all parking spaces
+    """
     r = requests.get(f'{API_URL}parkingspaces')
     r.raise_for_status()
     json = r.json()
@@ -63,6 +82,9 @@ def getParkingspaces():
     return json
 
 def getChargingstations():
+    """
+    get request for all chargingstations
+    """
     r = requests.get(f'{API_URL}chargingstations')
     r.raise_for_status()
     json = r.json()
@@ -72,6 +94,10 @@ def getChargingstations():
     return json
 
 def areaCheck(X, Y):
+    """
+    checks if bike is inside city, parkingspace or chargingstation
+    returns list
+    """
     checkList = []
     checkList.append(cityCheck(X, Y))
     checkList.append(parkingCheck(X, Y))
@@ -80,6 +106,9 @@ def areaCheck(X, Y):
     # pass
 
 def cityCheck(X, Y):
+    """
+    checks if bike is inside city, returns false or city id
+    """
     if len(CITIES) == 0:
         getCityZones()
     # print(X)
@@ -98,6 +127,9 @@ def cityCheck(X, Y):
     return False
 
 def parkingCheck(X, Y):
+    """
+    checks if bike is inside parkingspace, returns false or parking id
+    """
     if len(PARKING) == 0:
         getParkingspaces()
 
@@ -108,6 +140,9 @@ def parkingCheck(X, Y):
     return False
 
 def chargingCheck(X, Y):
+    """
+    checks if bike is inside chargingstation, returns false or charging id
+    """
     if len(CHARGING) == 0:
         getChargingstations()
     for charging in CHARGING:
@@ -117,10 +152,16 @@ def chargingCheck(X, Y):
     return False
 
 def insidecircle(center_x, center_y, radius, x, y):
+    """
+    checks if a point is inside a circle or not returns true or false
+    """
     square_dist = (center_x - x) ** 2 + (center_y - y) ** 2
     return square_dist <= radius ** 2
 
 def availablebikes():
+    """
+    sorts through all bikes and keeps the available ones
+    """
     bikes = getBikes()
     availablebikes = []
     for bike in bikes:
@@ -128,13 +169,13 @@ def availablebikes():
             availablebikes.append(bike)
     return availablebikes
 
-def postBikeLog():
-    # req_session = requests.Session()
-    # data = {
-    # }
-    # r = requests.post(f'{API_URL}', data=data)
-    # print(f'PUT status: {r.status_code}')
-    pass
+# def postBikeLog():
+#     # req_session = requests.Session()
+#     # data = {
+#     # }
+#     # r = requests.post(f'{API_URL}', data=data)
+#     # print(f'PUT status: {r.status_code}')
+#     pass
 
-def putBikeLog():
-    pass
+# def putBikeLog():
+#     pass
