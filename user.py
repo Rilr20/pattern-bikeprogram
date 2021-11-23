@@ -6,12 +6,21 @@ import random
 import bikethread
 
 class User():
+    """
+    class of a user
+    """
     def __init__(self, _id):
+        """
+        users constructor
+        """
         self._id = _id
         self.bike = None
         self.wait = random.randint(0, 10)
         
     def getOnBike(self):
+        """
+        puts the user on a random available bike
+        """
         # post request bikehistory
         # fungerar inte då bikethread måste bli skapat som ett object
         bikes = api.availablebikes()
@@ -34,6 +43,9 @@ class User():
         # pass
 
     def getOffbike(self):
+        """
+        removes user from the bike, makes the bike available
+        """
         self.bike["status"] = "available"
         bikeinfo = api.getOneBike(self.bike["id"])
         print(bikeinfo)
@@ -42,6 +54,9 @@ class User():
         self.wait = random.randint(5,20)
     
     def decreasewait(self):
+        """
+        decrease wait time by 1 if 0 get on a bike
+        """
         if self.wait > 0:
             self.wait -= 1
             return None
@@ -51,4 +66,7 @@ class User():
             print(f'user {self._id} is on route')
 
     def userprint(self):
+        """
+        prints information about a user
+        """
         print(f'User {self._id} Bike: {self.bike} Waittime: {self.wait}')
