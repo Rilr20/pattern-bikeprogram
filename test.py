@@ -4,7 +4,9 @@ unittest test
 
 import unittest
 from unittest import mock
+from unittest.case import TestCase
 import api
+import main
 from bike import Bike
 
 class TestAPI(unittest.TestCase):
@@ -47,6 +49,9 @@ class TestAPI(unittest.TestCase):
             res = api.chargingCheck(item[0], item[1])
             # print(res)
             self.assertEqual(res, item[2])
+
+    def test_inside_circle(self):
+        pass
 
 class TestBike(unittest.TestCase):
     """
@@ -182,3 +187,14 @@ class TestBike(unittest.TestCase):
             self.assertEqual("service", testbike.status)
         testbike.service()
         self.assertEqual("available", testbike.status)
+
+class TestUser(unittest.TestCase):
+    def test_decreasewait(self):
+        pass
+
+class TestMain(unittest.TestCase):
+    def test_create_users(self):
+        length = [1, 5, 10, 0]
+        for i in length:
+            users = main.create_users(i)
+            self.assertEqual(len(users), i)

@@ -44,22 +44,22 @@ def create_bikes():
         # print(status)
         bike = Bike(_id, X, Y, battery, status)
         bikearray.append(bike)
-    print("done creating bikes")
     return bikearray
 
-def create_users():
+def create_users(length):
     """
     creates users
     """
     userlist = []
-    for i in range(0, 1):
+    for i in range(0, length):
         user = User(i)
         userlist.append(user)
-    print("done creating users")
     return userlist
 
 BIKES = create_bikes()
-USERS = create_users()
+print("done creating bikes")
+USERS = create_users(1)
+print("done creating users")
 api.getCityZones()
 api.getParkingspaces()
 api.getChargingstations()
