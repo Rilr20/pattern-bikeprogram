@@ -7,13 +7,13 @@ class bikeThread(Thread):
     """
     def __init__(self, bikes, users):
         """
-        thread constructor 
+        thread constructor
         """
         Thread.__init__(self)
         self.bikelist = bikes
         self.userlist = users
         self._running = True
-    
+
     def run(self):
         """
         starts a thread
@@ -24,6 +24,7 @@ class bikeThread(Thread):
             self.update_users()
             self.update_bikes()
             time.sleep(10) #pauses for 10seconds
+
     def terminate(self):
         """
         stops the thread
@@ -63,6 +64,9 @@ class bikeThread(Thread):
             bike.putRequest()
 
     def update_users(self):
+        """
+        updates the user, runs the users decreasewait function
+        """
         # print("user update")
         for user in self.userlist:
             if user.bike == None:
@@ -74,6 +78,9 @@ class bikeThread(Thread):
                     pass
 
     def update_bike(self, _id):
+        """
+        updates all bikes in bikelist
+        """
         # update cykenln
         # print("bike update")
         for bike in self.bikelist:
@@ -86,6 +93,9 @@ class bikeThread(Thread):
         # pass
 
     def get_off_bike(self, bike_id):
+        """
+        removes user from the bike
+        """
         for user in self.userlist:
             if user.bike != None and user.bike["id"] == bike_id:
                 user.getOffbike()
