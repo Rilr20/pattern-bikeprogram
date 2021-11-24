@@ -8,6 +8,7 @@ from unittest.case import TestCase
 import api
 import main
 from bike import Bike
+from user import User
 
 class TestAPI(unittest.TestCase):
     """Unittest API submodule"""
@@ -190,10 +191,22 @@ class TestBike(unittest.TestCase):
 
 class TestUser(unittest.TestCase):
     def test_decreasewait(self):
-        pass
+        """
+        testing decrease wait function on user
+        """
+        testuser = User(0)
+        start = 10
+        testuser.wait = start
+        self.assertEqual(testuser.bike, None)
+        for i in range(start):
+            self.assertEqual(testuser.wait, start-i)
+            testuser.decreasewait()
 
 class TestMain(unittest.TestCase):
     def test_create_users(self):
+        """
+        testing create user function
+        """
         length = [1, 5, 10, 0]
         for i in length:
             users = main.create_users(i)
