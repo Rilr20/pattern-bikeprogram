@@ -2,15 +2,15 @@
 unittest test
 """
 
-import unittest
-from unittest import mock
+# import unittest
+# from unittest import mock
 from unittest.case import TestCase
 import api
 import main
 from bike import Bike
 from user import User
 
-class TestAPI(unittest.TestCase):
+class TestAPI(TestCase):
     """Unittest API submodule"""
     def test_init(self):
         """init test"""
@@ -22,8 +22,8 @@ class TestAPI(unittest.TestCase):
         """
         tests the citycheck function
         """
-        testArray = [[0.025, 0.035, 1], [1000, 0, False]]
-        for item in testArray:
+        test_array = [[0.025, 0.035, 1], [1000, 0, False]]
+        for item in test_array:
             # print(item)
             res = api.cityCheck(item[0], item[1])
             # print(res)
@@ -33,8 +33,8 @@ class TestAPI(unittest.TestCase):
         """
         testing the parkingcheck function
         """
-        testArray = [[-0.025,-0.025, 1], [1000, 0, False]]
-        for item in testArray:
+        test_array = [[-0.025,-0.025, 1], [1000, 0, False]]
+        for item in test_array:
             # print(item)
             res = api.parkingCheck(item[0], item[1])
             # print(res)
@@ -44,17 +44,27 @@ class TestAPI(unittest.TestCase):
         """
         testing the chargingcheck function
         """
-        testArray = [[0.025,0.025, 1], [1000, 0, False]]
-        for item in testArray:
+        test_array = [[0.025,0.025, 1], [1000, 0, False]]
+        for item in test_array:
             # print(item)
             res = api.chargingCheck(item[0], item[1])
             # print(res)
             self.assertEqual(res, item[2])
 
     def test_inside_circle(self):
-        pass
+        """
+        testing to see if point is inside a circle
+        """
+        circle_variable = (0,0,5)
+        point = [(0,0),(-1,-0.5)]
+        for item in point:
+            result = api.insidecircle(circle_variable[0],circle_variable[1],circle_variable[2],item[0],item[1])
+            self.assertEqual(result,True)
+            result = api.insidecircle(10, 10,circle_variable[2],item[0],item[1])
+            self.assertEqual(result,False)
 
-class TestBike(unittest.TestCase):
+        
+class TestBike(TestCase):
     """
     unittest Bike class
     """
@@ -89,7 +99,7 @@ class TestBike(unittest.TestCase):
 
     def test_move_to_city(self):
         """
-        test to move bikes to city if outside border 
+        test to move bikes to city if outside border
         """
         testbike = Bike(1000,1000,0,100, "available")
         testbike.moveToCity(False)
@@ -116,7 +126,6 @@ class TestBike(unittest.TestCase):
         """
         test to decrease velocity
         """
-        res = 10 
         speeds = [0, 0.001383, 0.002973, 0.004464]
         expected = [0.002973, 0.001383, 0,0]
         testbike = Bike(10,10,0.004464,100, "unavailable")
@@ -144,18 +153,27 @@ class TestBike(unittest.TestCase):
         self.assertEqual(testbike.velocity, 0)
 
     def test_move_to_charging(self):
+        """
+        testing move bike to a charging station
+        """
         testbike = Bike(0,0,0,10,"available")
         testbike.moveToCharging()
         self.assertEqual(testbike.X, 0.025)
         self.assertEqual(testbike.Y, 0.025)
 
     def test_remove_from_charging(self):
+        """
+        testing removing bike from charging station
+        """
         testbike = Bike(0,0,0,10,"available")
         testbike.removeFromCharging()
         self.assertEqual(testbike.X, 0)
         self.assertEqual(testbike.Y, 0)
 
     def test_charging(self):
+        """
+        testing charging bike
+        """
         testbike = Bike(0,0.025,0.025,9,"available")
         count = 10
         testbike.charging()
@@ -168,6 +186,9 @@ class TestBike(unittest.TestCase):
         self.assertEqual(testbike.status, "available")
 
     def test_charging_outside_of_station(self):
+        """
+        testing what happens when bike charge outside of charging station
+        """
         testbike = Bike(0,0,0,9,"charging")
         testbike.charging()
         self.assertEqual(testbike.status, "available")
@@ -189,7 +210,10 @@ class TestBike(unittest.TestCase):
         testbike.service()
         self.assertEqual("available", testbike.status)
 
-class TestUser(unittest.TestCase):
+class TestUser(TestCase):
+    """
+    testing the user class
+    """
     def test_decreasewait(self):
         """
         testing decrease wait function on user
@@ -202,7 +226,10 @@ class TestUser(unittest.TestCase):
             self.assertEqual(testuser.wait, start-i)
             testuser.decreasewait()
 
-class TestMain(unittest.TestCase):
+class TestMain(TestCase):
+    """
+    testing the main file
+    """
     def test_create_users(self):
         """
         testing create user function

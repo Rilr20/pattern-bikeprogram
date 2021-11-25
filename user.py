@@ -1,9 +1,8 @@
 """
 user class
 """
-import api
 import random
-import bikethread
+import api
 
 class User():
     """
@@ -16,13 +15,14 @@ class User():
         self._id = _id
         self.bike = None
         self.wait = random.randint(0, 10)
-        
+
     def getOnBike(self):
         """
         puts the user on a random available bike
         """
         # post request bikehistory
         # fungerar inte då bikethread måste bli skapat som ett object
+        _id = None
         bikes = api.availablebikes()
         if len(bikes) > 0:
             print("new bike")
@@ -31,11 +31,11 @@ class User():
             # self.bike["status"] = "unavailable"
             # print(self.bike)
             api.putBikes(self.bike["id"],self.bike["X"],self.bike["Y"],self.bike["status"],self.bike["battery"], self.bike["velocity"])
-            return self.bike["id"]
-        else: 
+            _id = self.bike["id"]
+        else:
             print("no bike available")
             self.wait += 1
-            return None
+        return _id
         # print(self.bike)
         # print(self.bike["status"])
         # print(self.bike["status"])
@@ -52,18 +52,19 @@ class User():
         api.putBikes(self.bike["id"],bikeinfo["X"],bikeinfo["Y"],self.bike["status"],bikeinfo["battery"], bikeinfo["velocity"])
         self.bike = None
         self.wait = random.randint(5,20)
-    
+
     def decreasewait(self):
         """
         decrease wait time by 1 if 0 get on a bike
         """
+        _id = None
         if self.wait > 0:
             self.wait -= 1
-            return None
-        elif self.wait == 0 and self.bike == None:
-            return self.getOnBike()
+        elif self.wait == 0 and self.bike is None:
+            _id = self.getOnBike()
         else:
             print(f'user {self._id} is on route')
+        return _id
 
     def userprint(self):
         """

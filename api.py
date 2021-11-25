@@ -16,6 +16,7 @@ def getUsers():
     r.raise_for_status()
     json = r.json()
     return json
+
 def getBikes():
     """
     sends get request for all bikes

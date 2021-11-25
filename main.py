@@ -6,27 +6,6 @@ from user import User
 from bikethread import bikeThread
 import api
 
-#TODO: ta ut api:et och flytta till en egen modul
-#TODO: kolla vilka routes som behövs.
-# skapa order?
-# skicka till bikehistory
-# hämta användare
-#
-#TODO: vilka kommandon behövs?
-# starta användare thread
-#   påbörja resa
-#   avsluta resa
-#   få faktura
-#
-# slump på användaren så att kanske 50% av användarna använder cyklarna samtidigt
-# # stoppa användare thread
-# cykel & användar thread startas samditigt.
-# gör en check om cykel är inom parkerings området / laddningsområdet.
-# gör en check om cykel är inom centrumzonen
-# gör en check om cykel är inom stadszonen
-#TODO: Nattsimulering? dvs. de flyttas till laddstationer
-#
-
 def create_bikes():
     """
     Creates bikes with json from get request
@@ -77,14 +56,19 @@ def helptext():
     print("q | quit:    Exit Program")
 
 def start_thread(running):
+    """
+    starts the bike thread
+    """
+    status = False
     try:
         simulation.start()
-        return True
+        status =  True
     except:
-        if running == False:
+        if running is False:
             simulation = bikeThread(BIKES, USERS)
             simulation.start()
-            return True
+            status =  True
+    return status
 
 def main():
     """
