@@ -37,7 +37,7 @@ def create_users(length):
 
 BIKES = create_bikes()
 print("done creating bikes")
-USERS = create_users(1)
+USERS = create_users(1000)
 print("done creating users")
 api.getCityZones()
 api.getParkingspaces()
@@ -55,27 +55,28 @@ def helptext():
     print("charge:      Charges all bikes")
     print("q | quit:    Exit Program")
 
-def start_thread(running):
+def start_thread(running, simulation):
     """
     starts the bike thread
     """
-    status = False
     try:
         simulation.start()
-        status =  True
     except:
         if running is False:
             simulation = bikeThread(BIKES, USERS)
             simulation.start()
-            status =  True
-    return status
+            simulation.setName('simulation thread')
+    return simulation
+def createthread(bikes, users):
+    simulation = bikeThread(bikes, users)
+    return simulation
 
 def main():
     """
     main function
     """
     helptext()
-    simulation = bikeThread(BIKES, USERS)
+    simulation = createthread(BIKES, USERS)
     simulation.setName('simulation thread')
     running = False
     while True:
@@ -85,12 +86,14 @@ def main():
             #writes a help text
             helptext()
         elif choice == "start":
-            #starts theg simulation
-            running = start_thread(running)
+            #starts the simulation
+            simulation = start_thread(running, simulation)
+            running == True
         elif choice == "stop":
             #stops the simulation
             try:
                 simulation.terminate()
+                simulation.join()
                 print("bye thread!")
                 running = False
             except:
@@ -103,6 +106,7 @@ def main():
                 simulation = bikeThread(BIKES, USERS)
                 simulation.start()
             simulation.terminate()
+            simulation.join()
             print("stopped")
         elif choice == "charge":
             #sends all bikes to chargingstations
