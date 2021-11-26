@@ -23,7 +23,7 @@ class bikeThread(Thread):
             print("-------------------------------------")
             self.update_users()
             self.update_bikes()
-            time.sleep(10) #pauses for 10seconds
+            time.sleep(5) #pauses for 10seconds
 
     def terminate(self):
         """
@@ -60,7 +60,6 @@ class bikeThread(Thread):
             elif bike.status == 'service':
                 # print("bike needs service")
                 pass
-            bike.bikeprint()
             bike.putRequest()
 
     def update_users(self):
@@ -87,6 +86,7 @@ class bikeThread(Thread):
             if bike._id == _id:
                 bike.status = bike.statusarray[1]
                 bike.putRequest()
+                bike.bikeprint()
                 # print(bike._id)
                 # print(bike.status)
 
