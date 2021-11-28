@@ -58,12 +58,17 @@ class TestAPI(TestCase):
         circle_variable = (0,0,5)
         point = [(0,0),(-1,-0.5)]
         for item in point:
-            result = api.insidecircle(circle_variable[0],circle_variable[1],circle_variable[2],item[0],item[1])
+            result = api.insidecircle(
+                    circle_variable[0],
+                    circle_variable[1],
+                    circle_variable[2],
+                    item[0],
+                    item[1]
+                )
             self.assertEqual(result,True)
             result = api.insidecircle(10, 10,circle_variable[2],item[0],item[1])
             self.assertEqual(result,False)
 
-        
 class TestBike(TestCase):
     """
     unittest Bike class
@@ -76,10 +81,13 @@ class TestBike(TestCase):
         directions = ["n", "ne", "e", "se", "nw", "w", "sw", "s"]
         rev = ["s", "sw", "w", "nw", "se", "e", "ne", "n"]
         # print(len(directions))
-        for i in  range(0, len(directions)):
-            testbike.prevdirection = directions[i]
+        # for i in  range(0, len(directions)):
+        count = 0
+        for i in directions:
+            testbike.prevdirection = i
             new = testbike.opposite()
-            self.assertEqual(new, rev[i])
+            self.assertEqual(new, rev[count])
+            count += 1
 
     def test_move_bike(self):
         """
@@ -89,13 +97,16 @@ class TestBike(TestCase):
         testbike.velocity = 1
         directions = ["n", "ne", "e", "se", "nw", "w", "sw", "s"]
         expected = [(0,1), (0.5,0.5), (1,0), (0.5,-0.5), (-0.5,0.5), (-1,0), (-0.5,-0.5), (0,-1)]
-        for i in range(0, len(directions)):
+        count = 0
+        # for i in range(0, len(directions)):
+        for i in directions:
             # print(directions[i])
-            testbike.moveBike(directions[i])
+            testbike.moveBike(i)
             restuple = (testbike.X, testbike.Y)
-            self.assertEqual(expected[i], restuple)
+            self.assertEqual(expected[count], restuple)
             testbike.X = 0
             testbike.Y = 0
+            count += 1
 
     def test_move_to_city(self):
         """
