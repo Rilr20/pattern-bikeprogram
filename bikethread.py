@@ -42,25 +42,27 @@ class bikeThread(Thread):
                 # print(f'Bike {bike._id} is {bike.status}: {bike.battery}%')
                 bike.moveToCharging()
                 bike.charging()
-                # bike.putRequest()
+                bike.putRequest()
 
             if bike.status == 'unavailable':
                 # print("biketime")
                 bike.updatePos()
-
                 if bike.velocity == 0:
                     # print("stop!!!! BIKE!")
                     self.get_off_bike(bike._id)
+                bike.putRequest()
+
             elif bike.status == 'charging':
                 bike.velocity = 0
                 bike.charging()
                 # bike.bikeprint()
-                # bike.putRequest()
+                bike.putRequest()
                 print(f'Bike {bike._id} is {bike.status}: {bike.battery}%')
+
             elif bike.status == 'service':
-                # print("bike needs service")
-                pass
-            bike.putRequest()
+                # print("bike needs service")¨
+                bike.service()
+                bike.putRequest()
 
     def update_users(self):
         """
