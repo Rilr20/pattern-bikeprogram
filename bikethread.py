@@ -87,7 +87,7 @@ class bikeThread(Thread):
         for bike in self.bikelist:
             if bike._id == _id:
                 bike.status = bike.statusarray[1]
-                bike.putRequest()
+                # bike.putRequest()
                 bike.bikeprint()
                 # print(bike._id)
                 # print(bike.status)

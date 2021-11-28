@@ -14,7 +14,7 @@ class User():
         """
         self._id = _id
         self.bike = None
-        self.wait = random.randint(0, 10)
+        self.wait = random.randint(0, 35)
 
     def getOnBike(self):
         """
@@ -51,7 +51,7 @@ class User():
         print(bikeinfo)
         api.putBikes(self.bike["id"],bikeinfo["X"],bikeinfo["Y"],self.bike["status"],bikeinfo["battery"], bikeinfo["velocity"])
         self.bike = None
-        self.wait = random.randint(5,20)
+        self.wait = random.randint(5,85)
 
     def decreasewait(self):
         """

@@ -180,36 +180,23 @@ class Bike():
 
     def moveBike(self, direction):
         """
-        case switch for moving bike in all cardinal directions
+        moves the bike in all cardinal directions
         """
-        if direction == "n":
-            # (0,Y)
-            self.Y += round(self.velocity, 6)
-        elif direction == "ne":
-            # (Y/2,X/2)
-            self.X += round(self.velocity/2, 6)
-            self.Y += round(self.velocity/2, 6)
-        elif direction == "e":
-            # (X,0)
-            self.X += round(self.velocity, 6)
-        elif direction == "se":
-            # (Y/2,-X/2)
-            self.X += round(self.velocity/2, 6)
-            self.Y -= round(self.velocity/2, 6)
-        elif direction == "nw":
-            # (-Y/2,X/2)
-            self.X -= round(self.velocity/2, 6)
-            self.Y += round(self.velocity/2, 6)
-        elif direction == "w":
-            # (-X,0)
-            self.X -= round(self.velocity, 6)
-        elif direction == "sw":
-            # (-Y/2,-X/2)
-            self.X -= round(self.velocity/2, 6)
-            self.Y -= round(self.velocity/2, 6)
-        elif direction == "s":
-            # (0,-Y)
-            self.Y -= round(self.velocity, 6)
+        velocity_list = [
+                (0, self.velocity), #n
+                (self.velocity/2, self.velocity/2), #ne
+                (self.velocity, 0), #e
+                (self.velocity/2, -(self.velocity/2)), #se
+                (-(self.velocity/2), self.velocity/2), #nw
+                (-(self.velocity), 0), #w
+                (-(self.velocity/2), -(self.velocity/2)), #sw
+                (0, -(self.velocity)) #s
+            ]
+        index = self.directions.index(direction)
+        x = velocity_list[index][0]
+        y = velocity_list[index][1]
+        self.X = round(self.X + x, 6)
+        self.Y = round(self.Y + y, 6)
 
     def getDirection(self):
         """
