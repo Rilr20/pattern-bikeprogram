@@ -16,21 +16,26 @@ class User():
         self.bike = None
         self.wait = random.randint(0, 35)
 
-    def getOnBike(self):
+    def get_on_bike(self):
         """
         puts the user on a random available bike
         """
         # post request bikehistory
-        # fungerar inte då bikethread måste bli skapat som ett object
         _id = None
-        bikes = api.availablebikes()
+        bikes = api.available_bikes()
         if len(bikes) > 0:
             print("new bike")
             bikeindex = random.randint(0, len(bikes)-1)
             self.bike = bikes[bikeindex]
             # self.bike["status"] = "unavailable"
             # print(self.bike)
-            api.putBikes(self.bike["id"],self.bike["X"],self.bike["Y"],self.bike["status"],self.bike["battery"], self.bike["velocity"])
+            api.put_bikes(self.bike["id"],
+                self.bike["X"],
+                self.bike["Y"],
+                self.bike["status"],
+                self.bike["battery"],
+                self.bike["velocity"]
+                )
             _id = self.bike["id"]
         else:
             print("no bike available")
@@ -40,20 +45,26 @@ class User():
         # print(self.bike["status"])
         # print(self.bike["status"])
         # print(self.bike["id"])
-        # pass
 
-    def getOffbike(self):
+    def get_off_bike(self):
         """
         removes user from the bike, makes the bike available
         """
         self.bike["status"] = "available"
-        bikeinfo = api.getOneBike(self.bike["id"])
+        bikeinfo = api.get_one_bike(self.bike["id"])
         print(bikeinfo)
-        api.putBikes(self.bike["id"],bikeinfo["X"],bikeinfo["Y"],self.bike["status"],bikeinfo["battery"], bikeinfo["velocity"])
+        api.put_bikes(
+                self.bike["id"],
+                bikeinfo["X"],
+                bikeinfo["Y"],
+                self.bike["status"],
+                bikeinfo["battery"],
+                bikeinfo["velocity"]
+                )
         self.bike = None
         self.wait = random.randint(5,85)
 
-    def decreasewait(self):
+    def decrease_wait(self):
         """
         decrease wait time by 1 if 0 get on a bike
         """
@@ -61,12 +72,12 @@ class User():
         if self.wait > 0:
             self.wait -= 1
         elif self.wait == 0 and self.bike is None:
-            _id = self.getOnBike()
+            _id = self.get_on_bike()
         else:
             print(f'user {self._id} is on route')
         return _id
 
-    def userprint(self):
+    def user_print(self):
         """
         prints information about a user
         """

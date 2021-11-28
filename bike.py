@@ -5,7 +5,7 @@ import random
 import api
 class Bike():
     """
-    bike class 
+    bike class
     """
     # om de går max 30km/h så är det 500m/min som max hastighet
     # 0km/h
@@ -23,13 +23,13 @@ class Bike():
     speeds = [0, 0.001383, 0.002973, 0.004464]
     directions = ["n", "ne", "e", "se", "nw", "w", "sw", "s"]
     statusarray = ['available', 'unavailable','service', 'charging']
-    def __init__(self, _id,  X, Y, battery, status):
+    def __init__(self, _id,  x_pos, y_pos, battery, status):
         """
         constructor for bike.
         """
         self._id = _id
-        self.X = float(X)
-        self.Y = float(Y)
+        self.x_pos = float(x_pos)
+        self.y_pos = float(y_pos)
         self.status = status
         self.battery = int(battery)
         self.velocity = 0
@@ -37,8 +37,8 @@ class Bike():
         self.triplength = random.randint(len(self.statusarray)-1, 12)
         self.servicecount = 0
         self.prevdirection = self.directions[random.randint(0, len(self.directions)-1)]
-    
-    def updatePos(self):
+
+    def update_pos(self):
         """
         updates the velocity; increasing or decreasing it
         updates the direction it will go next
@@ -46,29 +46,29 @@ class Bike():
         decreases the battery by 1 unit
         """
         #updates the speed
-        self.updateVelocity()
+        self.update_velocity()
         #get new direction
-        direction = self.getDirection()
+        direction = self.get_direction()
         #move the bike
-        self.moveBike(direction)
+        self.move_bike(direction)
         #checks if inside the city
-        checklist = api.areaCheck(self.X, self.Y)
-        self.moveToCity(checklist[0])
+        check_list = api.area_check(self.x_pos, self.y_pos)
+        self.move_to_city(check_list[0])
         #decrease battery
         if self.velocity > 0:
             self.battery = self.battery - 1
 
-    def moveToCity(self, cityval):
+    def move_to_city(self, cityval):
         """
         checks if the value in cityval is false; move to center of random city
         """
-        if cityval == False:
+        if cityval is False:
             rand = random.randint(0, len(api.CITIES)-1)
             city = api.CITIES[rand]
-            self.X = city[0]
-            self.Y = city[1]
+            self.x_pos = city[0]
+            self.y_pos = city[1]
 
-    def updateVelocity(self):
+    def update_velocity(self):
         """
         increases velocity until triplenght equals times run then it slows down
         """
@@ -78,11 +78,11 @@ class Bike():
         elif self.battery > 1:
             index = self.speeds.index(self.velocity)
             if self.timesrun < self.triplength:
-                self.increaseVelocity(index)
+                self.increase_velocity(index)
             else:
-                self.decreaseVelocity(index)
+                self.decrease_velocity(index)
 
-    def increaseVelocity(self, index):
+    def increase_velocity(self, index):
         """
         increases the velocity
         """
@@ -94,11 +94,10 @@ class Bike():
             #max velocity reached!
             self.velocity = self.speeds[3]
             #keep current velocity (max speed reached)
-            pass
         #sets speed to 10km/h if inside centrum
-        self.inCentrum()
+        self.in_centrum()
 
-    def decreaseVelocity(self, index):
+    def decrease_velocity(self, index):
         """
         decreases the velocity
         """
@@ -107,68 +106,72 @@ class Bike():
             #decreases velocity if index isn't -1
             self.velocity = self.speeds[index-1]
             #sets speed to 10km/h if inside centrum
-            self.inCentrum()
+            self.in_centrum()
         else:
             # destination reached!
             self.velocity = self.speeds[0]
             # setting to available again
             self.status = self.statusarray[0]
 
-    def inCentrum(self):
+    def in_centrum(self):
         """
         if bike is in centrum set velocity to slower one
         """
         for city in api.CITIES:
-            res = api.insidecircle(city[0], city[1], float(city[2])/10, self.X, self.Y)
-            if res != False:
+            res = api.inside_circle(city[0], city[1], float(city[2])/10, self.x_pos, self.y_pos)
+            if res is not False:
                 # print("--------------I AM IN CENTRUM--------------")
                 self.velocity = self.speeds[1]
 
-    def putRequest(self):
+    def put_request(self):
         """
         sends put request to api to update bike
         """
-        api.putBikes(self._id, self.X, self.Y, self.status, self.battery, self.velocity)
+        api.put_bikes(self._id, self.x_pos, self.y_pos, self.status, self.battery, self.velocity)
 
-    def bikeprint(self):
+    def bike_print(self):
         """
         prints information about the bikes current situation
         """
-        print(f'Bike: {self._id} status: {self.status}, battery: {self.battery}, velocity: {self.velocity}, current position ({self.X}, {self.Y})')
+        print(f'Bike: {self._id} \
+                status: {self.status}, \
+                battery: {self.battery}, \
+                velocity: {self.velocity}, \
+                current position ({self.x_pos}, {self.y_pos})')
 
     def charging(self):
         """
         starts charging bike if its inside a chargingstation
         otherwise its marked as available
         """
-        station = api.chargingCheck(self.X, self.Y)
-        if self.battery < 100 and station != False:
+        station = api.charging_check(self.x_pos, self.y_pos)
+        if self.battery < 100 and station is not False:
             if self.status != "charging":
                 self.status = self.statusarray[3]
             self.battery = self.battery + 1
         else:
             if self.battery == 100:
-                self.removeFromCharging()
+                self.remove_from_charging()
             self.status = "available"
 
-    def moveToCharging(self):
+    def move_to_charging(self):
         """
         move bike to random charging station
         """
         rand = random.randint(0, len(api.CHARGING)-1)
         # print(rand)
         station = api.CHARGING[rand]
-        self.X = station[0]
-        self.Y = station[1]
+        self.x_pos = station[0]
+        self.y_pos = station[1]
 
-    def removeFromCharging(self):
+    def remove_from_charging(self):
         """
         removes bike from charging station and places it inside random city
         """
         rand = random.randint(0, len(api.CITIES)-1)
         city = api.CITIES[rand]
-        self.X = city[0]
-        self.Y = city[1]
+        self.x_pos = city[0]
+        self.y_pos = city[1]
 
     def opposite(self):
         """
@@ -178,7 +181,7 @@ class Bike():
         index += 1
         return self.directions[-index]
 
-    def moveBike(self, direction):
+    def move_bike(self, direction):
         """
         moves the bike in all cardinal directions
         """
@@ -193,19 +196,19 @@ class Bike():
                 (0, -(self.velocity)) #s
             ]
         index = self.directions.index(direction)
-        x = velocity_list[index][0]
-        y = velocity_list[index][1]
-        self.X = round(self.X + x, 6)
-        self.Y = round(self.Y + y, 6)
+        new_x = velocity_list[index][0]
+        new_y = velocity_list[index][1]
+        self.x_pos = round(self.x_pos + new_x, 6)
+        self.y_pos = round(self.y_pos + new_y, 6)
 
-    def getDirection(self):
+    def get_direction(self):
         """
         randomizes a new direction if direction is opposite of previous randomize new one
         """
         newdirection = self.directions[random.randint(0, len(self.directions)-1)]
         if newdirection != self.opposite():
             return newdirection
-        return self.getDirection()
+        return self.get_direction()
 
     def service(self):
         """

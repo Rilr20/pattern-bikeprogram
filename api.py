@@ -7,57 +7,57 @@ API_URL = f'http://localhost:{PORT}/sparkapi/v1/'
 CITIES = []
 PARKING = []
 CHARGING = []
-def getUsers():
+def get_users():
     """
     maybe remove?
     sends get request for users
     """
-    r = requests.get(f'{API_URL}users')
-    r.raise_for_status()
-    json = r.json()
+    req = requests.get(f'{API_URL}users')
+    req.raise_for_status()
+    json = req.json()
     return json
 
-def getBikes():
+def get_bikes():
     """
     sends get request for all bikes
     """
-    r = requests.get(f'{API_URL}bikes')
-    r.raise_for_status() #gives error if request doesn't work
-    json = r.json()
+    req = requests.get(f'{API_URL}bikes')
+    req.raise_for_status() #gives error if request doesn't work
+    json = req.json()
     # print(json)
     return json
 
-def getOneBike(_id):
+def get_one_bike(_id):
     """
     request specific bike
     """
-    r = requests.get(f'{API_URL}bikes/{_id}')
-    r.raise_for_status()
-    json = r.json()
+    req = requests.get(f'{API_URL}bikes/{_id}')
+    req.raise_for_status()
+    json = req.json()
     return json
 
-def putBikes(_id, X, Y, status, battery, velocity):
+def put_bikes(_id, x_pos, y_pos, status, battery, velocity):
     """
     updates a bikes information
     """
     req_session = requests.Session()
     data = {
-        "X": X,
-        "Y": Y,
+        "X": x_pos,
+        "Y": y_pos,
         "status": status,
         "battery": battery,
         "velocity": velocity
     }
-    r = requests.put(f'{API_URL}bikes/{_id}', data=data)
-    print(f'PUT status: {r.status_code}')
+    req = requests.put(f'{API_URL}bikes/{_id}', data=data)
+    print(f'PUT status: {req.status_code}')
 
-def getCityZones():
+def get_city_zones():
     """
     gets request for all cities
     """
-    r = requests.get(f'{API_URL}cities')
-    r.raise_for_status()
-    json = r.json()
+    req = requests.get(f'{API_URL}cities')
+    req.raise_for_status()
+    json = req.json()
     for row in json:
         # print(row["id"])
         # print(row["city"])
@@ -68,13 +68,13 @@ def getCityZones():
     # print(CITIES)
     return json
 
-def getParkingspaces():
+def get_parkingspaces():
     """
     get request for all parking spaces
     """
-    r = requests.get(f'{API_URL}parkingspaces')
-    r.raise_for_status()
-    json = r.json()
+    req = requests.get(f'{API_URL}parkingspaces')
+    req.raise_for_status()
+    json = req.json()
     for row in json:
         # print(json)
         PARKING.append([float(row["X"]), float(row["Y"]), float(row["radius"]), row["id"]])
@@ -82,95 +82,85 @@ def getParkingspaces():
 
     return json
 
-def getChargingstations():
+def get_chargingstations():
     """
     get request for all chargingstations
     """
-    r = requests.get(f'{API_URL}chargingstations')
-    r.raise_for_status()
-    json = r.json()
+    req = requests.get(f'{API_URL}chargingstations')
+    req.raise_for_status()
+    json = req.json()
     for row in json:
         CHARGING.append([float(row["X"]), float(row["Y"]), float(row["radius"]), row["id"]])
     # print(CHARGING)
     return json
 
-def areaCheck(X, Y):
+def area_check(x_pos, y_pos):
     """
     checks if bike is inside city, parkingspace or chargingstation
     returns list
     """
-    checkList = []
-    checkList.append(cityCheck(X, Y))
-    checkList.append(parkingCheck(X, Y))
-    checkList.append(chargingCheck(X, Y))
-    return checkList
-    # pass
+    check_list = []
+    check_list.append(city_check(x_pos, y_pos))
+    check_list.append(parking_check(x_pos, y_pos))
+    check_list.append(charging_check(x_pos, y_pos))
+    return check_list
 
-def cityCheck(X, Y):
+def city_check(x_pos, y_pos):
     """
     checks if bike is inside city, returns false or city id
     """
     if len(CITIES) == 0:
-        getCityZones()
-    # print(X)
-    # print(X)
+        get_city_zones()
     for city in CITIES:
-        # print(city)
-        # cityX = city[0]
-        # cityY = city[1]
-        # cityR = city[2]
-        # print(f'{cityX}, {cityY}, {cityR}')
-        # if cityX + cityR > X > cityX and cityY + cityR > Y > cityY:
-        #     return city[3]
-        result = insidecircle(city[0], city[1],city[2], X, Y)
+        result = inside_circle(city[0], city[1],city[2], x_pos, y_pos)
         if result:
             return city[3]
     return False
 
-def parkingCheck(X, Y):
+def parking_check(x_pos, y_pos):
     """
     checks if bike is inside parkingspace, returns false or parking id
     """
     if len(PARKING) == 0:
-        getParkingspaces()
+        get_parkingspaces()
 
     for parking in PARKING:
-        result = insidecircle(parking[0], parking[1],parking[2], X, Y)
+        result = inside_circle(parking[0], parking[1],parking[2], x_pos, y_pos)
         if result:
             return parking[3]
     return False
 
-def chargingCheck(X, Y):
+def charging_check(x_pos, y_pos):
     """
     checks if bike is inside chargingstation, returns false or charging id
     """
     if len(CHARGING) == 0:
-        getChargingstations()
+        get_chargingstations()
     for charging in CHARGING:
-        result = insidecircle(charging[0], charging[1],charging[2], X, Y)
+        result = inside_circle(charging[0], charging[1],charging[2], x_pos, y_pos)
         if result:
             return charging[3]
     return False
 
-def insidecircle(center_x, center_y, radius, x, y):
+def inside_circle(center_x, center_y, radius, x_pos, y_pos):
     """
     checks if a point is inside a circle or not returns true or false
     """
-    square_dist = (center_x - x) ** 2 + (center_y - y) ** 2
+    square_dist = (center_x - x_pos) ** 2 + (center_y - y_pos) ** 2
     return square_dist <= radius ** 2
 
-def availablebikes():
+def available_bikes():
     """
     sorts through all bikes and keeps the available ones
     """
-    bikes = getBikes()
-    availablebikes = []
+    bikes = get_bikes()
+    bike_list = []
     for bike in bikes:
         if bike["status"] == "available":
-            availablebikes.append(bike)
-    return availablebikes
+            bike_list.append(bike)
+    return bike_list
 
-# def postBikeLog():
+# def post_bike_og():
 #     # req_session = requests.Session()
 #     # data = {
 #     # }
@@ -178,5 +168,5 @@ def availablebikes():
 #     # print(f'PUT status: {r.status_code}')
 #     pass
 
-# def putBikeLog():
+# def put_bike_log():
 #     pass

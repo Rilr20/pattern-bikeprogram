@@ -1,7 +1,10 @@
+"""
+A thread that simulates user and bikes
+"""
 from threading import Thread
 import time
 
-class bikeThread(Thread):
+class BikeThread(Thread):
     """
     bike thread class where it runs creates a thread and runs an update on bikes
     """
@@ -33,50 +36,48 @@ class bikeThread(Thread):
 
     def update_bikes(self):
         """
-        runs the updatePos method on bikes where upptagen is true
+        runs the update_pos method on bikes where upptagen is true
         """
         for bike in self.bikelist:
             # print(bike.status)
             # print(bike._id)
             if bike.status == "available" and bike.battery <= 30:
                 # print(f'Bike {bike._id} is {bike.status}: {bike.battery}%')
-                bike.moveToCharging()
+                bike.move_to_charging()
                 bike.charging()
-                bike.putRequest()
+                bike.put_request()
 
             if bike.status == 'unavailable':
                 # print("biketime")
-                bike.updatePos()
+                bike.update_pos()
                 if bike.velocity == 0:
                     # print("stop!!!! BIKE!")
                     self.get_off_bike(bike._id)
-                bike.putRequest()
+                bike.put_request()
 
             elif bike.status == 'charging':
                 bike.velocity = 0
                 bike.charging()
-                # bike.bikeprint()
-                bike.putRequest()
+                # bike.bike_print()
+                bike.put_request()
                 print(f'Bike {bike._id} is {bike.status}: {bike.battery}%')
 
             elif bike.status == 'service':
                 # print("bike needs service")¨
                 bike.service()
-                bike.putRequest()
+                bike.put_request()
 
     def update_users(self):
         """
-        updates the user, runs the users decreasewait function
+        updates the user, runs the users decrease_wait function
         """
         # print("user update")
         for user in self.userlist:
-            if user.bike == None:
-                _id = user.decreasewait()
-                # print(_id) #id from decreasewait function / getonbike function says what id the bike has
-                user.userprint()
-                if _id != None:
+            if user.bike is None:
+                _id = user.decrease_wait()
+                user.user_print()
+                if _id is not None:
                     self.update_bike(_id)
-                    pass
 
     def update_bike(self, _id):
         """
@@ -87,17 +88,15 @@ class bikeThread(Thread):
         for bike in self.bikelist:
             if bike._id == _id:
                 bike.status = bike.statusarray[1]
-                # bike.putRequest()
-                bike.bikeprint()
+                # bike.put_request()
+                bike.bike_print()
                 # print(bike._id)
                 # print(bike.status)
-
-        # pass
 
     def get_off_bike(self, bike_id):
         """
         removes user from the bike
         """
         for user in self.userlist:
-            if user.bike != None and user.bike["id"] == bike_id:
-                user.getOffbike()
+            if user.bike is not None and user.bike["id"] == bike_id:
+                user.get_off_bike()

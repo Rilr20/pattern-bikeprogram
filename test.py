@@ -20,34 +20,34 @@ class TestAPI(TestCase):
 
     def test_city_check(self):
         """
-        tests the citycheck function
+        tests the city_check function
         """
         test_array = [[0.025, 0.035, 1], [1000, 0, False]]
         for item in test_array:
             # print(item)
-            res = api.cityCheck(item[0], item[1])
+            res = api.city_check(item[0], item[1])
             # print(res)
             self.assertEqual(res, item[2])
 
     def test_parking_check(self):
         """
-        testing the parkingcheck function
+        testing the parking_check function
         """
         test_array = [[-0.025,-0.025, 1], [1000, 0, False]]
         for item in test_array:
             # print(item)
-            res = api.parkingCheck(item[0], item[1])
+            res = api.parking_check(item[0], item[1])
             # print(res)
             self.assertEqual(res, item[2])
 
     def test_charging_check(self):
         """
-        testing the chargingcheck function
+        testing the charging_check function
         """
         test_array = [[0.025,0.025, 1], [1000, 0, False]]
         for item in test_array:
             # print(item)
-            res = api.chargingCheck(item[0], item[1])
+            res = api.charging_check(item[0], item[1])
             # print(res)
             self.assertEqual(res, item[2])
 
@@ -58,7 +58,7 @@ class TestAPI(TestCase):
         circle_variable = (0,0,5)
         point = [(0,0),(-1,-0.5)]
         for item in point:
-            result = api.insidecircle(
+            result = api.inside_circle(
                     circle_variable[0],
                     circle_variable[1],
                     circle_variable[2],
@@ -66,7 +66,7 @@ class TestAPI(TestCase):
                     item[1]
                 )
             self.assertEqual(result,True)
-            result = api.insidecircle(10, 10,circle_variable[2],item[0],item[1])
+            result = api.inside_circle(10, 10,circle_variable[2],item[0],item[1])
             self.assertEqual(result,False)
 
 class TestBike(TestCase):
@@ -91,7 +91,7 @@ class TestBike(TestCase):
 
     def test_move_bike(self):
         """
-        testing the movebike function
+        testing the move_bike function
         """
         testbike = Bike(0,0,0,100, "available")
         testbike.velocity = 1
@@ -101,7 +101,7 @@ class TestBike(TestCase):
         # for i in range(0, len(directions)):
         for i in directions:
             # print(directions[i])
-            testbike.moveBike(i)
+            testbike.move_bike(i)
             restuple = (testbike.X, testbike.Y)
             self.assertEqual(expected[count], restuple)
             testbike.X = 0
@@ -113,7 +113,7 @@ class TestBike(TestCase):
         test to move bikes to city if outside border
         """
         testbike = Bike(1000,1000,0,100, "available")
-        testbike.moveToCity(False)
+        testbike.move_to_city(False)
         self.assertEqual(testbike.X,0)
         self.assertEqual(testbike.Y,0)
 
@@ -127,7 +127,7 @@ class TestBike(TestCase):
         count = 0
         for i in speeds:
             index = speeds.index(i)
-            testbike.increaseVelocity(index)
+            testbike.increase_velocity(index)
             # print(testbike.velocity)
             # print(expected[count])
             self.assertEqual(testbike.velocity, expected[count])
@@ -143,7 +143,7 @@ class TestBike(TestCase):
         count = 0
         for i in reversed(speeds):
             index = speeds.index(i)
-            testbike.decreaseVelocity(index)
+            testbike.decrease_velocity(index)
             self.assertEqual(testbike.velocity, expected[count])
             count += 1
         self.assertEqual(testbike.status, "available")
@@ -154,13 +154,13 @@ class TestBike(TestCase):
         """
         testbike = Bike(0,0,0,100,"available")
         #max speed increasing should become second slowest
-        testbike.increaseVelocity(3)
+        testbike.increase_velocity(3)
         self.assertEqual(testbike.velocity, 0.001383)
         #max speed decreaseing hould become second slowest
-        testbike.decreaseVelocity(3)
+        testbike.decrease_velocity(3)
         self.assertEqual(testbike.velocity, 0.001383)
         #slowest speed should stop in centrum
-        testbike.decreaseVelocity(0)
+        testbike.decrease_velocity(0)
         self.assertEqual(testbike.velocity, 0)
 
     def test_move_to_charging(self):
@@ -168,7 +168,7 @@ class TestBike(TestCase):
         testing move bike to a charging station
         """
         testbike = Bike(0,0,0,10,"available")
-        testbike.moveToCharging()
+        testbike.move_to_charging()
         self.assertEqual(testbike.X, 0.025)
         self.assertEqual(testbike.Y, 0.025)
 
@@ -177,7 +177,7 @@ class TestBike(TestCase):
         testing removing bike from charging station
         """
         testbike = Bike(0,0,0,10,"available")
-        testbike.removeFromCharging()
+        testbike.remove_from_charging()
         self.assertEqual(testbike.X, 0)
         self.assertEqual(testbike.Y, 0)
 
@@ -225,7 +225,7 @@ class TestUser(TestCase):
     """
     testing the user class
     """
-    def test_decreasewait(self):
+    def test_decrease_wait(self):
         """
         testing decrease wait function on user
         """
@@ -235,7 +235,7 @@ class TestUser(TestCase):
         self.assertEqual(testuser.bike, None)
         for i in range(start):
             self.assertEqual(testuser.wait, start-i)
-            testuser.decreasewait()
+            testuser.decrease_wait()
 
 class TestMain(TestCase):
     """

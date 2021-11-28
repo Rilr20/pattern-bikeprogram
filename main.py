@@ -3,7 +3,7 @@ Main file
 """
 from bike import Bike
 from user import User
-from bikethread import bikeThread
+from bikethread import BikeThread
 import api
 
 def create_bikes():
@@ -11,17 +11,17 @@ def create_bikes():
     Creates bikes with json from get request
     """
     # sends requests gets all bikes
-    json = api.getBikes()
+    json = api.get_bikes()
     bikearray = []
     #uses the json data to create bike objects
     for element in json:
         _id = element["id"]
-        X = element["X"]
-        Y = element["Y"]
+        x_pos = element["X"]
+        y_pos = element["Y"]
         status = element["status"]
         battery = element["battery"]
         # print(status)
-        bike = Bike(_id, X, Y, battery, status)
+        bike = Bike(_id, x_pos, y_pos, battery, status)
         bikearray.append(bike)
     return bikearray
 
@@ -39,9 +39,9 @@ BIKES = create_bikes()
 print("done creating bikes")
 USERS = create_users(1000)
 print("done creating users")
-api.getCityZones()
-api.getParkingspaces()
-api.getChargingstations()
+api.get_city_zones()
+api.get_parkingspaces()
+api.get_chargingstations()
 def helptext():
     """
     writes out the commands you can use
@@ -63,12 +63,15 @@ def start_thread(running, simulation):
         simulation.start()
     except:
         if running is False:
-            simulation = bikeThread(BIKES, USERS)
+            simulation = BikeThread(BIKES, USERS)
             simulation.start()
             simulation.setName('simulation thread')
     return simulation
-def createthread(bikes, users):
-    simulation = bikeThread(bikes, users)
+def create_thread(bikes, users):
+    """
+    creates a bikethread
+    """
+    simulation = BikeThread(bikes, users)
     return simulation
 
 def main():
@@ -76,7 +79,7 @@ def main():
     main function
     """
     helptext()
-    simulation = createthread(BIKES, USERS)
+    simulation = create_thread(BIKES, USERS)
     simulation.setName('simulation thread')
     running = False
     while True:
@@ -88,7 +91,7 @@ def main():
         elif choice == "start":
             #starts the simulation
             simulation = start_thread(running, simulation)
-            running == True
+            running = True
         elif choice == "stop":
             #stops the simulation
             try:
@@ -100,19 +103,15 @@ def main():
                 print("thread is not running run start command")
         elif choice == "once":
             #runs the simulation once
-            try:
-                simulation.start()
-            except:
-                simulation = bikeThread(BIKES, USERS)
-                simulation.start()
+            simulation = start_thread(running, simulation)
             simulation.terminate()
             simulation.join()
             print("stopped")
         elif choice == "charge":
             #sends all bikes to chargingstations
             for bike in BIKES:
-                bike.moveToCharging()
-                bike.putRequest()
+                bike.move_to_charging()
+                bike.put_request()
             print("Bikes are not charging")
         elif choice in ("q", 'quit'):
             break
