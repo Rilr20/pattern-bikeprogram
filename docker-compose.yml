@@ -1,0 +1,34 @@
+version: '3'
+
+networks:
+    dbwebb:
+
+services:
+    server:
+        image: imageName
+        container_name: 'backend'
+        ports:
+          - "8000:8000"
+        networks:
+            dbwebb
+        restart:
+            "always"
+    bikeprogram:
+        image: imageName
+        container_name: 'bikeprogram'
+        networks:
+            dbwebb:
+        links:
+            - server:backend
+    frontend:
+        image: imageName
+        container_name: "frontend"
+        ports:
+            - "1337:1337"
+        networks:
+            dbwebb:
+        # ska den länkas?
+        links:
+            - server:backend
+        restart:
+            "always"
