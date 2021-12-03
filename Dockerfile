@@ -9,3 +9,7 @@ RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir requests
 
 CMD [ "python", "./main.py" ]
+
+#api url ändrad till http://backend:{port}/sparkapi/v1/
+#docker build -t bikeprogram .
+#docker run -ti --net dbwebb bikeprogram
