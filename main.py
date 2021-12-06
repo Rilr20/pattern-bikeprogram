@@ -6,6 +6,12 @@ from user import User
 from bikethread import BikeThread
 import api
 
+api.PORT = input("Which port is used? ")
+url = input("what is the url used? http://")
+if url is not None:
+    api.API_URL = f'http://{url}:{api.PORT}/sparkapi/v1/'
+print(api.API_URL + " is now used")
+
 def create_bikes():
     """
     Creates bikes with json from get request
@@ -114,6 +120,11 @@ def main():
                 bike.put_request()
             print("Bikes are not charging")
         elif choice in ("q", 'quit'):
+            try:
+                simulation.terminate()
+                simulation.join()
+            except:
+                print("No thread to stop")
             break
         else:
             print("Invalid command")
