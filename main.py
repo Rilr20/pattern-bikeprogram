@@ -8,7 +8,7 @@ import api
 
 api.PORT = input("Which port is used? ")
 url = input("what is the url used? http://")
-if url is not None:
+if url != "":
     api.API_URL = f'http://{url}:{api.PORT}/sparkapi/v1/'
 print(api.API_URL + " is now used")
 

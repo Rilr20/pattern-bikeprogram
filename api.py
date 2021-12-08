@@ -3,7 +3,8 @@ API functions
 """
 import requests
 PORT = "8000"
-API_URL = f'http://localhost:{PORT}/sparkapi/v1/'
+#ändra
+API_URL = f'http://backend:{PORT}/sparkapi/v1/'
 CITIES = []
 PARKING = []
 CHARGING = []

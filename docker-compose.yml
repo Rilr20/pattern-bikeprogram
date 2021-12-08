@@ -5,7 +5,7 @@ networks:
 
 services:
     server:
-        image: imageName
+        image: backend
         container_name: 'backend'
         ports:
           - "8000:8000"
@@ -14,14 +14,14 @@ services:
         restart:
             "always"
     bikeprogram:
-        image: imageName
+        image: richpotato/bikeprogram:latest
         container_name: 'bikeprogram'
         networks:
             dbwebb:
         links:
             - server:backend
     frontend:
-        image: imageName
+        image: frontend
         container_name: "frontend"
         ports:
             - "1337:1337"
