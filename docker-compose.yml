@@ -5,7 +5,7 @@ networks:
 
 services:
     server:
-        image: backend
+        image: richpotato/backend:latest
         container_name: 'backend'
         ports:
           - "8000:8000"
