@@ -102,10 +102,10 @@ class TestBike(TestCase):
         for i in directions:
             # print(directions[i])
             testbike.move_bike(i)
-            restuple = (testbike.X, testbike.Y)
+            restuple = (testbike.x_pos, testbike.y_pos)
             self.assertEqual(expected[count], restuple)
-            testbike.X = 0
-            testbike.Y = 0
+            testbike.x_pos = 0
+            testbike.y_pos = 0
             count += 1
 
     def test_move_to_city(self):
@@ -114,8 +114,8 @@ class TestBike(TestCase):
         """
         testbike = Bike(1000,1000,0,100, "available")
         testbike.move_to_city(False)
-        self.assertEqual(testbike.X,0)
-        self.assertEqual(testbike.Y,0)
+        self.assertEqual(testbike.x_pos,0)
+        self.assertEqual(testbike.y_pos,0)
 
     def test_increase_velocity(self):
         """
@@ -169,8 +169,8 @@ class TestBike(TestCase):
         """
         testbike = Bike(0,0,0,10,"available")
         testbike.move_to_charging()
-        self.assertEqual(testbike.X, 0.025)
-        self.assertEqual(testbike.Y, 0.025)
+        self.assertEqual(testbike.x_pos, 0.025)
+        self.assertEqual(testbike.y_pos, 0.025)
 
     def test_remove_from_charging(self):
         """
@@ -178,8 +178,8 @@ class TestBike(TestCase):
         """
         testbike = Bike(0,0,0,10,"available")
         testbike.remove_from_charging()
-        self.assertEqual(testbike.X, 0)
-        self.assertEqual(testbike.Y, 0)
+        self.assertEqual(testbike.x_pos, 0)
+        self.assertEqual(testbike.y_pos, 0)
 
     def test_charging(self):
         """
