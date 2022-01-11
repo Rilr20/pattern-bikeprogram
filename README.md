@@ -1,5 +1,7 @@
 # bikeprogram
 
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Ampheris/pattern-bikeprogram/badges/quality-score.png?b=main)](https://scrutinizer-ci.com/g/Ampheris/pattern-bikeprogram/?branch=main)
+
 A simulation of the real world. Users and bikes will be simulated
 
 ## How to start the program with docker
