@@ -4,6 +4,12 @@ API functions
 import requests
 PORT = "8000"
 #ändra
+TOKEN = "EGVk90euINcyV67gfH8hleel0ftezAmovJyLGVRlEjBKVMNdwG7BvOJ7mzRO"
+HEADER = {
+    'role':'bike',
+    'Api_Token':f'{TOKEN}'
+    }
+
 API_URL = f'http://backend:{PORT}/sparkapi/v1/'
 CITIES = []
 PARKING = []
@@ -22,7 +28,7 @@ def get_bikes():
     """
     sends get request for all bikes
     """
-    req = requests.get(f'{API_URL}bikes')
+    req = requests.get(f'{API_URL}bikes',headers=HEADER)
     req.raise_for_status() #gives error if request doesn't work
     json = req.json()
     # print(json)
@@ -32,7 +38,7 @@ def get_one_bike(_id):
     """
     request specific bike
     """
-    req = requests.get(f'{API_URL}bikes/{_id}')
+    req = requests.get(f'{API_URL}bikes/{_id}',headers=HEADER)
     req.raise_for_status()
     json = req.json()
     return json
@@ -49,14 +55,14 @@ def put_bikes(_id, x_pos, y_pos, status, battery, velocity):
         "battery": battery,
         "velocity": velocity
     }
-    req = requests.put(f'{API_URL}bikes/{_id}', data=data)
+    req = requests.put(f'{API_URL}bikes/{_id}', data=data, headers=HEADER)
     print(f'PUT status: {req.status_code}')
 
 def get_city_zones():
     """
     gets request for all cities
     """
-    req = requests.get(f'{API_URL}cities')
+    req = requests.get(f'{API_URL}cities', headers=HEADER)
     req.raise_for_status()
     json = req.json()
     for row in json:
@@ -73,7 +79,7 @@ def get_parkingspaces():
     """
     get request for all parking spaces
     """
-    req = requests.get(f'{API_URL}parkingspaces')
+    req = requests.get(f'{API_URL}parkingspaces', headers=HEADER)
     req.raise_for_status()
     json = req.json()
     for row in json:
@@ -87,7 +93,7 @@ def get_chargingstations():
     """
     get request for all chargingstations
     """
-    req = requests.get(f'{API_URL}chargingstations')
+    req = requests.get(f'{API_URL}chargingstations', headers=HEADER)
     req.raise_for_status()
     json = req.json()
     for row in json:
@@ -166,7 +172,7 @@ def available_bikes():
 #     # data = {
 #     # }
 #     # r = requests.post(f'{API_URL}', data=data)
-#     # print(f'PUT status: {r.status_code}')
+#     # print(f'PUT status: {r.status_code}',headers=HEADER)
 #     pass
 
 # def put_bike_log():
